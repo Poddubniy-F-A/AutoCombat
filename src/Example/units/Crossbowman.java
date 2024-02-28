@@ -2,7 +2,7 @@ package Example.units;
 
 import java.util.Random;
 
-public class Crossbowman extends Unit {
+public class Crossbowman extends Unit implements Shooter{
     protected int shots;
 
     public Crossbowman(int x, int y) {
@@ -20,31 +20,23 @@ public class Crossbowman extends Unit {
         shots = 10;
     }
 
+    @Override
     public void distAttack(Unit target) {
         final int shotDistance = 10, shotDamage = 5;
         final double shotAccuracy = 0.5;
 
-        if (checkAlive()) {
-            double dist = getDistance(target);
-            if (dist <= shotDistance) {
-                if (target.isAlive()) {
-                    if (shots > 0) {
-                        if (new Random().nextDouble() >= (1 - shotAccuracy) * (shotDistance - dist) / shotDistance) {
-                            target.getDamage(shotDamage);
-                        } else {
-                            System.out.println("Промах!");
-                        }
-                        shots--;
-
-                        showInfo();
-                    } else {
-                        System.out.println("Недостаточно снарядов");
-                    }
+        if (checkAlive() && checkDistance(target, shotDistance) && checkTargetAlive(target)) {
+            if (shots > 0) {
+                if (new Random().nextDouble() >= (1 - shotAccuracy) * getDistance(target) / shotDistance) {
+                    target.getDamage(shotDamage);
                 } else {
-                    System.out.println("Цель уже мертва");
+                    System.out.println("Промах!");
                 }
+                shots--;
+
+                showInfo();
             } else {
-                System.out.println("До цели слишком далеко");
+                System.out.println("Недостаточно снарядов");
             }
         }
     }

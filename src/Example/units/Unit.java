@@ -1,11 +1,11 @@
 package Example.units;
 
 public abstract class Unit {
-    int hp, maxHp, defence,
+    protected int hp, maxHp, defence,
             attackDistance, damageSize,
             speed;
-    protected double x, y;
-    protected boolean isAlive;
+    private double x, y;
+    private boolean isAlive;
 
     protected Unit(int x, int y) {
         this.x = x;
@@ -18,19 +18,31 @@ public abstract class Unit {
         System.out.println(this);
     }
 
-    protected boolean checkAlive() {
-        if (!isAlive) {
-            System.out.println("Юнит мёртв");
-        }
-        return isAlive;
-    }
-
     protected double getDistance(double x, double y) {
         return Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2));
     }
 
-    protected double getDistance(Unit unit) {
+    public double getDistance(Unit unit) {
         return getDistance(unit.getX(), unit.getY());
+    }
+
+    private boolean check(boolean res, String notify) {
+        if (!res) {
+            System.out.println(notify);
+        }
+        return res;
+    }
+
+    protected boolean checkAlive() {
+        return check(isAlive, "Юнит мёртв");
+    }
+
+    protected boolean checkDistance(Unit target, int maxDist) {
+        return check(getDistance(target) <= maxDist, "До цели слишком далеко");
+    }
+
+    protected boolean checkTargetAlive(Unit target) {
+        return check(target.isAlive(), "Цель уже мертва");
     }
 
     public void changeLocation(int x, int y) {
@@ -38,26 +50,20 @@ public abstract class Unit {
             if (getDistance(x, y) <= speed) {
                 this.x = x;
                 this.y = y;
+            } else {
+                System.out.println("Поле вне зоны досягаемости");
             }
         }
     }
 
     public void baseAttack(Unit target) {
-        if (checkAlive()) {
-            if (getDistance(target) <= attackDistance) {
-                if (target.isAlive()) {
-                    target.getDamage(damageSize);
-                } else {
-                    System.out.println("Цель уже мертва");
-                }
-            } else {
-                System.out.println("До цели слишком далеко");
-            }
+        if (checkAlive() && checkDistance(target, attackDistance) && checkTargetAlive(target)) {
+            target.getDamage(damageSize);
         }
     }
 
     protected void getDamage(int damageSize) {
-        hp -= Math.min(hp, Math.max(0, damageSize - defence));
+        hp = Math.max(0, hp - Math.max(0, damageSize - defence));
         if (hp == 0) {
             isAlive = false;
         }

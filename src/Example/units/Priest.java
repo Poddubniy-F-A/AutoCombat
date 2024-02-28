@@ -17,16 +17,8 @@ public class Priest extends Unit {
     public void heal(Unit target) {
         final int healDistance = 2, healValue = 5;
 
-        if (checkAlive()) {
-            if (this.getDistance(target) <= healDistance) {
-                if (target.isAlive()) {
-                    target.getHealing(healValue);
-                } else {
-                    System.out.println("Цель мертва");
-                }
-            } else {
-                System.out.println("Цель слишком далеко");
-            }
+        if (checkAlive() && checkDistance(target, healDistance) && checkTargetAlive(target)) {
+            target.getHealing(healValue);
         }
     }
 

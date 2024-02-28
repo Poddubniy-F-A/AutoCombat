@@ -22,24 +22,12 @@ public class Magician extends Unit {
     public void useSpell(Unit target) {
         final int spellCost = 25, spellDistance = 4, spellDamage = 25;
 
-        if (checkAlive()) {
+        if (checkAlive() && checkDistance(target, spellDistance) && checkTargetAlive(target)) {
             if (mana >= spellCost) {
-                if (getDistance(target) <= spellDistance) {
-                    if (target.isAlive()) {
-                        if (mana >= spellCost) {
-                            target.getDamage(spellDamage);
-                            mana -= spellCost;
+                target.getDamage(spellDamage);
+                mana -= spellCost;
 
-                            showInfo();
-                        } else {
-                            System.out.println("Недостаточно маны");
-                        }
-                    } else {
-                        System.out.println("Цель уже мертва");
-                    }
-                } else {
-                    System.out.println("До цели слишком далеко");
-                }
+                showInfo();
             } else {
                 System.out.println("Недостаточно маны");
             }

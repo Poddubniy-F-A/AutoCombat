@@ -1,30 +1,35 @@
 package Example.units;
 
-public class Sniper extends Crossbowman {
+public class Sniper extends Unit implements Shooter {
+    protected int shots;
+
     public Sniper(int x, int y) {
         super(x, y);
+
+        maxHp = 10;
+        hp = maxHp;
+        defence = 2;
+
+        attackDistance = 1;
+        damageSize = 2;
+
+        speed = 3;
+
+        shots = 10;
     }
 
     @Override
     public void distAttack(Unit target) {
         final int shotDistance = 10, shotDamage = 5;
 
-        if (checkAlive()) {
-            if (getDistance(target) <= shotDistance) {
-                if (target.isAlive()) {
-                    if (shots > 0) {
-                        target.getDamage(shotDamage);
-                        shots--;
+        if (checkAlive() && checkDistance(target, shotDistance) && checkTargetAlive(target)) {
+            if (shots > 0) {
+                target.getDamage(shotDamage);
+                shots--;
 
-                        showInfo();
-                    } else {
-                        System.out.println("Недостаточно снарядов");
-                    }
-                } else {
-                    System.out.println("Цель уже мертва");
-                }
+                showInfo();
             } else {
-                System.out.println("До цели слишком далеко");
+                System.out.println("Недостаточно снарядов");
             }
         }
     }
