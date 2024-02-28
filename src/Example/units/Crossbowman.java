@@ -28,14 +28,18 @@ public class Crossbowman extends Unit {
             double dist = getDistance(target);
             if (dist <= shotDistance) {
                 if (target.isAlive()) {
-                    if (new Random().nextDouble() >= (1 - shotAccuracy) * (shotDistance - dist) / shotDistance) {
-                        target.getDamage(shotDamage);
-                    } else {
-                        System.out.println("Промах!");
-                    }
-                    shots--;
+                    if (shots > 0) {
+                        if (new Random().nextDouble() >= (1 - shotAccuracy) * (shotDistance - dist) / shotDistance) {
+                            target.getDamage(shotDamage);
+                        } else {
+                            System.out.println("Промах!");
+                        }
+                        shots--;
 
-                    showInfo();
+                        showInfo();
+                    } else {
+                        System.out.println("Недостаточно снарядов");
+                    }
                 } else {
                     System.out.println("Цель уже мертва");
                 }

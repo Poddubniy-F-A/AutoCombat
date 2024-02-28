@@ -23,9 +23,9 @@ public class Main {
 
         System.out.println("---Сражение---");
 
-        peasant.attack(bandit);
-        bandit.attack(peasant);
-        spearman.attack(peasant);
+        peasant.baseAttack(bandit);
+        bandit.baseAttack(peasant);
+        spearman.baseAttack(peasant);
         magician.useSpell(bandit);
         priest.heal(peasant);
         crossbowman.distAttack(priest);

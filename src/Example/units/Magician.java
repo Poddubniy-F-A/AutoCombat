@@ -26,10 +26,14 @@ public class Magician extends Unit {
             if (mana >= spellCost) {
                 if (getDistance(target) <= spellDistance) {
                     if (target.isAlive()) {
-                        target.getDamage(spellDamage);
-                        mana -= spellCost;
+                        if (mana >= spellCost) {
+                            target.getDamage(spellDamage);
+                            mana -= spellCost;
 
-                        showInfo();
+                            showInfo();
+                        } else {
+                            System.out.println("Недостаточно маны");
+                        }
                     } else {
                         System.out.println("Цель уже мертва");
                     }

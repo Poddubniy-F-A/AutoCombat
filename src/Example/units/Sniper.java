@@ -12,10 +12,14 @@ public class Sniper extends Crossbowman {
         if (checkAlive()) {
             if (getDistance(target) <= shotDistance) {
                 if (target.isAlive()) {
-                    target.getDamage(shotDamage);
-                    shots--;
+                    if (shots > 0) {
+                        target.getDamage(shotDamage);
+                        shots--;
 
-                    showInfo();
+                        showInfo();
+                    } else {
+                        System.out.println("Недостаточно снарядов");
+                    }
                 } else {
                     System.out.println("Цель уже мертва");
                 }

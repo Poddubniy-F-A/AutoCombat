@@ -42,7 +42,7 @@ public abstract class Unit {
         }
     }
 
-    public void attack(Unit target) {
+    public void baseAttack(Unit target) {
         if (checkAlive()) {
             if (getDistance(target) <= attackDistance) {
                 if (target.isAlive()) {
