@@ -15,8 +15,9 @@ public class Crossbowman extends Shooter{
 
         speed = 3;
 
+        shots = 15;
         shotDistance = 10;
-        shotDamage = 5;
+        shotDamage = 10;
         shotAccuracy = 0.5;
     }
 

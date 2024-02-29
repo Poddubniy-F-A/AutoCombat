@@ -3,12 +3,13 @@ package Example.units;
 import Example.Name;
 
 public abstract class Unit {
-    protected Name name;
+    private final Coordinates coordinates;
+    protected final Name name;
+
+    private boolean isAlive;
     protected int hp, maxHp, defence,
             attackDistance, damageSize,
             speed;
-    private final Coordinates coordinates;
-    private boolean isAlive;
 
     protected Unit(int x, int y, Name name) {
         coordinates = new Coordinates(x, y);

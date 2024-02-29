@@ -9,13 +9,11 @@ import java.util.Random;
 
 public abstract class Shooter extends Unit {
     protected int shots,
-                shotDistance, shotDamage;
+            shotDistance, shotDamage;
     protected double shotAccuracy;
 
     public Shooter(int x, int y, Name name) {
         super(x, y, name);
-
-        shots = 10;
     }
 
     public Unit getNearestTarget(ArrayList<Unit> targets) {

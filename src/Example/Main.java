@@ -2,42 +2,77 @@ package Example;
 
 import Example.units.*;
 
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Main {
-    private static final Name[] names = Name.values();
+    private static final Scanner scanner = new Scanner(System.in);
+
+    private static final int TEAM_SIZE = 10, MAP_SIZE = 10;
 
     public static void main(String[] args) {
-        Peasant peasant = new Peasant(1, 1, getName());
-        Bandit bandit = new Bandit(1, 2, getName());
-        Spearman spearman = new Spearman(0, 2, getName());
-        Magician magician = new Magician(0, 3, getName());
-        Priest priest = new Priest(2, 2, getName());
-        Crossbowman crossbowman = new Crossbowman(5, 0, getName());
-        Sniper sniper = new Sniper(16, 0, getName());
+        ArrayList<Unit> team1 = new ArrayList<>();
+        ArrayList<Unit> team2 = new ArrayList<>();
 
-        peasant.showInfo();
-        bandit.showInfo();
-        spearman.showInfo();
-        magician.showInfo();
-        priest.showInfo();
-        crossbowman.showInfo();
-        sniper.showInfo();
+        System.out.println("\nКоманда сил света");
+        for (int i = 0; i < TEAM_SIZE; i++) {
+            team1.add(inputUnit(i, 0));
+        }
+        System.out.println("\nКоманда сил тьмы");
+        for (int i = 0; i < TEAM_SIZE; i++) {
+            team2.add(inputUnit(i, MAP_SIZE - 1));
+        }
 
-        System.out.println("---Сражение---");
-
-        peasant.baseAttack(bandit);
-        bandit.baseAttack(peasant);
-        spearman.baseAttack(peasant);
-        magician.useSpell(bandit);
-        priest.heal(peasant);
-        crossbowman.distAttack(priest);
-        sniper.distAttack(crossbowman);
-        sniper.changeLocation(15, 0);
-        sniper.distAttack(crossbowman);
+        for (Unit unit: team1) {
+            if (unit instanceof Shooter) {
+                ((Shooter) unit).distAttack(((Shooter) unit).getNearestTarget(team2));
+            }
+        }
     }
 
-    private static Name getName() {
+    private static Unit inputUnit(int x, int y) {
+        final String PEASANT_CODE = "Крестьянин",
+                SPEARMAN_CODE = "Копейщик",
+                BANDIT_CODE = "Разбойник",
+                MAGICIAN_CODE = "Колдун",
+                PRIEST_CODE = "Монах",
+                CROSSBOWMAN_CODE = "Арбалетчик",
+                SNIPER_CODE = "Снайпер";
+
+        System.out.println("Введите тип добавляемого на (" + x + ", " + y + ") персонажа");
+        switch (scanner.next()) {
+            case PEASANT_CODE -> {
+                return new Peasant(x, y, generateName());
+            }
+            case SPEARMAN_CODE -> {
+                return new Spearman(x, y, generateName());
+            }
+            case BANDIT_CODE -> {
+                return new Bandit(x, y, generateName());
+            }
+            case MAGICIAN_CODE -> {
+                return new Magician(x, y, generateName());
+            }
+            case PRIEST_CODE -> {
+                return new Priest(x, y, generateName());
+            }
+            case CROSSBOWMAN_CODE -> {
+                return new Crossbowman(x, y, generateName());
+            }
+            case SNIPER_CODE -> {
+                return new Sniper(x, y, generateName());
+            }
+            default -> {
+                System.out.println("Введено некорректное наименование типа персонажа");
+                return inputUnit(x, y);
+            }
+        }
+    }
+
+    private static Name generateName() {
+        final Name[] names = Name.values();
+
         return names[new Random().nextInt(names.length)];
     }
 }
