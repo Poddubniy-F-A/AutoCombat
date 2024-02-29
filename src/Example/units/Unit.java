@@ -1,15 +1,18 @@
 package Example.units;
 
+import Example.Name;
+
 public abstract class Unit {
+    protected Name name;
     protected int hp, maxHp, defence,
             attackDistance, damageSize,
             speed;
-    private double x, y;
+    private final Coordinates coordinates;
     private boolean isAlive;
 
-    protected Unit(int x, int y) {
-        this.x = x;
-        this.y = y;
+    protected Unit(int x, int y, Name name) {
+        coordinates = new Coordinates(x, y);
+        this.name = name;
 
         isAlive = true;
     }
@@ -18,12 +21,8 @@ public abstract class Unit {
         System.out.println(this);
     }
 
-    protected double getDistance(double x, double y) {
-        return Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2));
-    }
-
     public double getDistance(Unit unit) {
-        return getDistance(unit.getX(), unit.getY());
+        return coordinates.getDistance(unit.getCoordinates());
     }
 
     private boolean check(boolean res, String notify) {
@@ -47,9 +46,9 @@ public abstract class Unit {
 
     public void changeLocation(int x, int y) {
         if (checkAlive()) {
-            if (getDistance(x, y) <= speed) {
-                this.x = x;
-                this.y = y;
+            if (coordinates.getDistance(new Coordinates(x, y)) <= speed) {
+                coordinates.setX(x);
+                coordinates.setY(y);
             } else {
                 System.out.println("Поле вне зоны досягаемости");
             }
@@ -77,12 +76,8 @@ public abstract class Unit {
         showInfo();
     }
 
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
+    public Coordinates getCoordinates() {
+        return coordinates;
     }
 
     public boolean isAlive() {

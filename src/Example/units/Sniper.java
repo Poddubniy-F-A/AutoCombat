@@ -1,10 +1,12 @@
 package Example.units;
 
-public class Sniper extends Unit implements Shooter {
+import Example.Name;
+
+public class Sniper extends Shooter {
     protected int shots;
 
-    public Sniper(int x, int y) {
-        super(x, y);
+    public Sniper(int x, int y, Name name) {
+        super(x, y, name);
 
         maxHp = 10;
         hp = maxHp;
@@ -15,27 +17,13 @@ public class Sniper extends Unit implements Shooter {
 
         speed = 3;
 
-        shots = 10;
-    }
-
-    @Override
-    public void distAttack(Unit target) {
-        final int shotDistance = 10, shotDamage = 5;
-
-        if (checkAlive() && checkDistance(target, shotDistance) && checkTargetAlive(target)) {
-            if (shots > 0) {
-                target.getDamage(shotDamage);
-                shots--;
-
-                showInfo();
-            } else {
-                System.out.println("Недостаточно снарядов");
-            }
-        }
+        shotDistance = 10;
+        shotDamage = 5;
+        shotAccuracy = 1.0;
     }
 
     @Override
     public String toString() {
-        return "Снайпер, запас здоровья: " + hp + ", выстрелов осталось: " + shots;
+        return "Снайпер " + name + ", запас здоровья: " + hp + ", выстрелов осталось: " + shots;
     }
 }

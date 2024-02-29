@@ -1,10 +1,12 @@
 package Example.units;
 
+import Example.Name;
+
 public class Magician extends Unit {
     private int mana, maxMana;
 
-    public Magician(int x, int y) {
-        super(x, y);
+    public Magician(int x, int y, Name name) {
+        super(x, y, name);
 
         maxHp = 15;
         hp = maxHp;
@@ -36,6 +38,6 @@ public class Magician extends Unit {
 
     @Override
     public String toString() {
-        return "Колдун, запас здоровья: " + hp + ", маны осталось: " + mana;
+        return "Колдун " + name + ", запас здоровья: " + hp + ", маны осталось: " + mana;
     }
 }

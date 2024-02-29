@@ -1,12 +1,10 @@
 package Example.units;
 
-import java.util.Random;
+import Example.Name;
 
-public class Crossbowman extends Unit implements Shooter{
-    protected int shots;
-
-    public Crossbowman(int x, int y) {
-        super(x, y);
+public class Crossbowman extends Shooter{
+    public Crossbowman(int x, int y, Name name) {
+        super(x, y, name);
 
         maxHp = 10;
         hp = maxHp;
@@ -17,32 +15,13 @@ public class Crossbowman extends Unit implements Shooter{
 
         speed = 3;
 
-        shots = 10;
-    }
-
-    @Override
-    public void distAttack(Unit target) {
-        final int shotDistance = 10, shotDamage = 5;
-        final double shotAccuracy = 0.5;
-
-        if (checkAlive() && checkDistance(target, shotDistance) && checkTargetAlive(target)) {
-            if (shots > 0) {
-                if (new Random().nextDouble() >= (1 - shotAccuracy) * getDistance(target) / shotDistance) {
-                    target.getDamage(shotDamage);
-                } else {
-                    System.out.println("Промах!");
-                }
-                shots--;
-
-                showInfo();
-            } else {
-                System.out.println("Недостаточно снарядов");
-            }
-        }
+        shotDistance = 10;
+        shotDamage = 5;
+        shotAccuracy = 0.5;
     }
 
     @Override
     public String toString() {
-        return "Арбалетчик, запас здоровья: " + hp + ", выстрелов осталось: " + shots;
+        return "Арбалетчик " + name + ", запас здоровья: " + hp + ", выстрелов осталось: " + shots;
     }
 }

@@ -1,8 +1,10 @@
 package Example.units;
 
+import Example.Name;
+
 public class Spearman extends Unit {
-    public Spearman(int x, int y) {
-        super(x, y);
+    public Spearman(int x, int y, Name name) {
+        super(x, y, name);
 
         maxHp = 20;
         hp = maxHp;
@@ -16,6 +18,6 @@ public class Spearman extends Unit {
 
     @Override
     public String toString() {
-        return "Копейщик, запас здоровья: " + hp;
+        return "Копейщик " + name + ", запас здоровья: " + hp;
     }
 }

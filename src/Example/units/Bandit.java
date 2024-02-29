@@ -1,8 +1,10 @@
 package Example.units;
 
+import Example.Name;
+
 public class Bandit extends Unit {
-    public Bandit(int x, int y) {
-        super(x, y);
+    public Bandit(int x, int y, Name name) {
+        super(x, y, name);
 
         maxHp = 15;
         hp = maxHp;
@@ -16,6 +18,6 @@ public class Bandit extends Unit {
 
     @Override
     public String toString() {
-        return "Разбойник, запас здоровья: " + hp;
+        return "Разбойник " + name + ", запас здоровья: " + hp;
     }
 }

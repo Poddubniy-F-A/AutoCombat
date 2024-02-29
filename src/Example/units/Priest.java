@@ -1,8 +1,10 @@
 package Example.units;
 
+import Example.Name;
+
 public class Priest extends Unit {
-    public Priest(int x, int y) {
-        super(x, y);
+    public Priest(int x, int y, Name name) {
+        super(x, y, name);
 
         maxHp = 10;
         hp = maxHp;
@@ -24,6 +26,6 @@ public class Priest extends Unit {
 
     @Override
     public String toString() {
-        return "Монах, запас здоровья: " + hp;
+        return "Монах " + name + ", запас здоровья: " + hp;
     }
 }

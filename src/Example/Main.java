@@ -2,16 +2,19 @@ package Example;
 
 import Example.units.*;
 
+import java.util.Random;
+
 public class Main {
+    private static final Name[] names = Name.values();
 
     public static void main(String[] args) {
-        Peasant peasant = new Peasant(1, 1);
-        Bandit bandit = new Bandit(1, 2);
-        Spearman spearman = new Spearman(0, 2);
-        Magician magician = new Magician(0, 3);
-        Priest priest = new Priest(2, 2);
-        Crossbowman crossbowman = new Crossbowman(5, 0);
-        Sniper sniper = new Sniper(16, 0);
+        Peasant peasant = new Peasant(1, 1, getName());
+        Bandit bandit = new Bandit(1, 2, getName());
+        Spearman spearman = new Spearman(0, 2, getName());
+        Magician magician = new Magician(0, 3, getName());
+        Priest priest = new Priest(2, 2, getName());
+        Crossbowman crossbowman = new Crossbowman(5, 0, getName());
+        Sniper sniper = new Sniper(16, 0, getName());
 
         peasant.showInfo();
         bandit.showInfo();
@@ -32,5 +35,9 @@ public class Main {
         sniper.distAttack(crossbowman);
         sniper.changeLocation(15, 0);
         sniper.distAttack(crossbowman);
+    }
+
+    private static Name getName() {
+        return names[new Random().nextInt(names.length)];
     }
 }
