@@ -14,19 +14,38 @@ public class Main {
     public static void main(String[] args) {
         ArrayList<Unit> team1 = new ArrayList<>();
         ArrayList<Unit> team2 = new ArrayList<>();
+        ArrayList<Unit> units = new ArrayList<>();
 
         System.out.println("\nКоманда сил света");
-        for (int i = 0; i < TEAM_SIZE; i++) {
-            team1.add(inputUnit(i, 0));
+        for (int x = 0; x < TEAM_SIZE; x++) {
+            Unit unit = inputUnit(x, 0);
+
+            team1.add(unit);
+            units.add(unit);
         }
         System.out.println("\nКоманда сил тьмы");
-        for (int i = 0; i < TEAM_SIZE; i++) {
-            team2.add(inputUnit(i, MAP_SIZE - 1));
-        }
+        for (int x = 0; x < TEAM_SIZE; x++) {
+            Unit unit = inputUnit(x, MAP_SIZE - 1);
 
-        for (Unit unit: team1) {
-            if (unit instanceof Shooter) {
-                ((Shooter) unit).distAttack(((Shooter) unit).getNearestTarget(team2));
+            team2.add(unit);
+            units.add(unit);
+        }
+        units.sort((o1, o2) -> o2.getInitiative() - o1.getInitiative());
+
+        System.out.println("\nСражение");
+        for (Unit unit: units) {
+            if (unit instanceof Priest) {
+                if (team1.contains(unit)) {
+                    unit.step(team1);
+                } else {
+                    unit.step(team2);
+                }
+            } else {
+                if (team1.contains(unit)) {
+                    unit.step(team2);
+                } else {
+                    unit.step(team1);
+                }
             }
         }
     }

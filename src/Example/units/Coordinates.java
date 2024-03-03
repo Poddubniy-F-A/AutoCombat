@@ -1,6 +1,6 @@
 package Example.units;
 
-public class Coordinates {
+class Coordinates {
     private int x, y;
 
     public Coordinates(int x, int y) {

@@ -2,34 +2,31 @@ package Example.units;
 
 import Example.Name;
 
+import java.util.ArrayList;
+
 public class Magician extends Unit {
     private int mana, maxMana;
 
     public Magician(int x, int y, Name name) {
         super(x, y, name);
-
-        maxHp = 15;
-        hp = maxHp;
-        defence = 2;
-
-        attackDistance = 2;
-        damageSize = 3;
-
-        speed = 3;
+        setBaseParameters(15, 2, 2, 3, 3, 1);
 
         maxMana = 100;
         mana = maxMana;
     }
 
-    public void useSpell(Unit target) {
+    @Override
+    public void step(ArrayList<Unit> targets) {
+        System.out.println("\nХодит " + this + ", маны осталось: " + mana);
+    }
+
+    private void useSpell(Unit target) {
         final int spellCost = 25, spellDistance = 4, spellDamage = 25;
 
         if (checkAlive() && checkDistance(target, spellDistance) && checkTargetAlive(target)) {
             if (mana >= spellCost) {
                 target.getDamage(spellDamage);
                 mana -= spellCost;
-
-                showInfo();
             } else {
                 System.out.println("Недостаточно маны");
             }
@@ -38,6 +35,6 @@ public class Magician extends Unit {
 
     @Override
     public String toString() {
-        return "Колдун " + name + ", запас здоровья: " + hp + ", маны осталось: " + mana;
+        return "Колдун " + name + ", запас здоровья: " + hp;
     }
 }

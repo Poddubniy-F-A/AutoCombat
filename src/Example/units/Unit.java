@@ -2,14 +2,14 @@ package Example.units;
 
 import Example.Name;
 
-public abstract class Unit {
+public abstract class Unit implements Stepable {
     private final Coordinates coordinates;
     protected final Name name;
 
     private boolean isAlive;
     protected int hp, maxHp, defence,
             attackDistance, damageSize,
-            speed;
+            speed, initiative;
 
     protected Unit(int x, int y, Name name) {
         coordinates = new Coordinates(x, y);
@@ -18,34 +18,21 @@ public abstract class Unit {
         isAlive = true;
     }
 
-    public void showInfo() {
-        System.out.println(this);
+    protected void setBaseParameters(int maxHp, int defence,
+                                     int attackDistance, int damageSize,
+                                     int speed, int initiative) {
+        hp = maxHp;
+        this.maxHp = maxHp;
+        this.defence = defence;
+
+        this.attackDistance = attackDistance;
+        this.damageSize = damageSize;
+
+        this.speed = speed;
+        this.initiative = initiative;
     }
 
-    public double getDistance(Unit unit) {
-        return coordinates.getDistance(unit.getCoordinates());
-    }
-
-    private boolean check(boolean res, String notify) {
-        if (!res) {
-            System.out.println(notify);
-        }
-        return res;
-    }
-
-    protected boolean checkAlive() {
-        return check(isAlive, "Юнит мёртв");
-    }
-
-    protected boolean checkDistance(Unit target, int maxDist) {
-        return check(getDistance(target) <= maxDist, "До цели слишком далеко");
-    }
-
-    protected boolean checkTargetAlive(Unit target) {
-        return check(target.isAlive(), "Цель уже мертва");
-    }
-
-    public void changeLocation(int x, int y) {
+    protected void changeLocation(int x, int y) {
         if (checkAlive()) {
             if (coordinates.getDistance(new Coordinates(x, y)) <= speed) {
                 coordinates.setX(x);
@@ -56,10 +43,41 @@ public abstract class Unit {
         }
     }
 
-    public void baseAttack(Unit target) {
+    protected void baseAttack(Unit target) {
         if (checkAlive() && checkDistance(target, attackDistance) && checkTargetAlive(target)) {
             target.getDamage(damageSize);
         }
+    }
+
+    protected boolean checkAlive() {
+        return check(isAlive, "Юнит мёртв");
+    }
+
+    protected boolean checkDistance(Unit target, int maxDist) {
+        return check(getDistance(target) <= maxDist, "До цели слишком далеко");
+    }
+
+    protected double getDistance(Unit unit) {
+        return coordinates.getDistance(unit.getCoordinates());
+    }
+
+    private Coordinates getCoordinates() {
+        return coordinates;
+    }
+
+    protected boolean checkTargetAlive(Unit target) {
+        return check(target.isAlive(), "Цель уже мертва");
+    }
+
+    protected boolean isAlive() {
+        return isAlive;
+    }
+
+    private boolean check(boolean res, String notify) {
+        if (!res) {
+            System.out.println(notify);
+        }
+        return res;
     }
 
     protected void getDamage(int damageSize) {
@@ -77,11 +95,11 @@ public abstract class Unit {
         showInfo();
     }
 
-    public Coordinates getCoordinates() {
-        return coordinates;
+    private void showInfo() {
+        System.out.println(this);
     }
 
-    public boolean isAlive() {
-        return isAlive;
+    public int getInitiative() {
+        return initiative;
     }
 }

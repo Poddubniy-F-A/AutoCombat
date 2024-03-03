@@ -2,21 +2,20 @@ package Example.units;
 
 import Example.Name;
 
+import java.util.ArrayList;
+
 public class Priest extends Unit {
     public Priest(int x, int y, Name name) {
         super(x, y, name);
-
-        maxHp = 10;
-        hp = maxHp;
-        defence = 0;
-
-        attackDistance = 1;
-        damageSize = 1;
-
-        speed = 5;
+        setBaseParameters(15, 0, 1, 1, 5, 1);
     }
 
-    public void heal(Unit target) {
+    @Override
+    public void step(ArrayList<Unit> targets) {
+        System.out.println("\nХодит " + this);
+    }
+
+    private void heal(Unit target) {
         final int healDistance = 2, healValue = 5;
 
         if (checkAlive() && checkDistance(target, healDistance) && checkTargetAlive(target)) {

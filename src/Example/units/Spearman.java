@@ -2,18 +2,17 @@ package Example.units;
 
 import Example.Name;
 
+import java.util.ArrayList;
+
 public class Spearman extends Unit {
     public Spearman(int x, int y, Name name) {
         super(x, y, name);
+        setBaseParameters(20, 4, 2, 5, 4, 2);
+    }
 
-        maxHp = 20;
-        hp = maxHp;
-        defence = 5;
-
-        attackDistance = 2;
-        damageSize = 5;
-
-        speed = 4;
+    @Override
+    public void step(ArrayList<Unit> targets) {
+        System.out.println("\nХодит " + this);
     }
 
     @Override
