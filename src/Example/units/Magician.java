@@ -16,8 +16,10 @@ public class Magician extends Unit {
     }
 
     @Override
-    public void step(ArrayList<Unit> targets) {
-        System.out.println("\nХодит " + this + ", маны осталось: " + mana);
+    public void step(ArrayList<Unit> allies, ArrayList<Unit> enemies) {
+        if (isAlive) {
+            System.out.println("\nХодит " + this + ", маны осталось: " + mana);
+        }
     }
 
     private void useSpell(Unit target) {

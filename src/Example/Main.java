@@ -3,13 +3,14 @@ package Example;
 import Example.units.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
 
-    private static final int TEAM_SIZE = 10, MAP_SIZE = 10;
+    public static final int TEAM_SIZE = 10, MAP_SIZE = 10;
 
     public static void main(String[] args) {
         ArrayList<Unit> team1 = new ArrayList<>();
@@ -33,21 +34,22 @@ public class Main {
         units.sort((o1, o2) -> o2.getInitiative() - o1.getInitiative());
 
         System.out.println("\nСражение");
-        for (Unit unit: units) {
-            if (unit instanceof Priest) {
-                if (team1.contains(unit)) {
-                    unit.step(team1);
-                } else {
-                    unit.step(team2);
+        Iterator<Unit> it = units.iterator();
+        do {
+            Unit unit;
+            do {
+                if (!it.hasNext()) {
+                    it = units.iterator();
                 }
+                unit = it.next();
+            } while (!unit.isAlive());
+
+            if (team1.contains(unit)) {
+                unit.step(team1, team2);
             } else {
-                if (team1.contains(unit)) {
-                    unit.step(team2);
-                } else {
-                    unit.step(team1);
-                }
+                unit.step(team2, team1);
             }
-        }
+        } while (checkTeamAlive(team1, "\nПобеда сил Тьмы") && checkTeamAlive(team2, "\nПобеда сил Света"));
     }
 
     private static Unit inputUnit(int x, int y) {
@@ -93,5 +95,16 @@ public class Main {
         final Name[] names = Name.values();
 
         return names[new Random().nextInt(names.length)];
+    }
+
+    private static boolean checkTeamAlive(ArrayList<Unit> team, String notify) {
+        for (Unit unit : team) {
+            if (unit.isAlive()) {
+                return true;
+            }
+        }
+
+        System.out.println(notify);
+        return false;
     }
 }
