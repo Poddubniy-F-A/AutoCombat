@@ -26,39 +26,21 @@ public abstract class Shooter extends Unit {
     }
 
     @Override
-    public void step(ArrayList<Unit> targets) {
-        System.out.println("\nХодит " + this + ", выстрелов осталось: " + shots);
+    public void step(ArrayList<Unit> allies, ArrayList<Unit> enemies) {
+        if (isAlive) {
+            System.out.println("\nХодит " + this + ", выстрелов осталось: " + shots);
 
-        if (checkAlive()) {
             if (shots > 0) {
-                Unit target = getNearestTarget(targets);
-                if (target != null) {
-                    distAttack(target);
+                Unit nearestTarget = getNearestTarget(enemies);
+                if (nearestTarget != null) {
+                    distAttack(nearestTarget);
                 } else {
-                    System.out.println("Все цели мертвы");
+                    System.out.println("Все противники мертвы");
                 }
             } else {
                 System.out.println("Недостаточно снарядов");
             }
         }
-    }
-
-    private Unit getNearestTarget(ArrayList<Unit> targets) {
-        Unit nearestTarget = null;
-        double minDist = Double.MAX_VALUE;
-
-        for (Unit target : targets) {
-            if (target.isAlive()) {
-                double dist = getDistance(target);
-
-                if (minDist > dist) {
-                    nearestTarget = target;
-                    minDist = dist;
-                }
-            }
-        }
-
-        return nearestTarget;
     }
 
     private void distAttack(Unit target) {

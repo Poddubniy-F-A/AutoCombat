@@ -11,8 +11,10 @@ public class Priest extends Unit {
     }
 
     @Override
-    public void step(ArrayList<Unit> targets) {
-        System.out.println("\nХодит " + this);
+    public void step(ArrayList<Unit> allies, ArrayList<Unit> enemies) {
+        if (isAlive) {
+            System.out.println("\nХодит " + this);
+        }
     }
 
     private void heal(Unit target) {
