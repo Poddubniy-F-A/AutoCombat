@@ -34,25 +34,34 @@ public abstract class MeleeUnit extends Unit {
     }
 
     private Field getPreferredField(ArrayList<Unit> allies, ArrayList<Unit> enemies) {
-        ArrayList<Field> enemiesFields = getOccupiedFields(enemies), occupiedFields = new ArrayList<>();
-        occupiedFields.addAll(getOccupiedFields(allies));
+        ArrayList<Field> occupiedFields = new ArrayList<>(), enemiesFields = getFieldsOccupiedBy(enemies);
+        occupiedFields.addAll(getFieldsOccupiedBy(allies));
         occupiedFields.addAll(enemiesFields);
 
-        int[][] map = field.getStepsMap(occupiedFields);
+        StepsMap stepsMap = new StepsMap(occupiedFields, field);
+        stepsMap.showMap();
 
-        Field nearestFieldForAttack = getNearestFieldForAttack(enemiesFields, occupiedFields, map);
+        Field nearestFieldForAttack = null;
+        for (Field enemyField : enemiesFields) {
+            Field nearestFieldForEnemyAttack = null;
+            for (Field f : getFieldsSuitableAttackTo(enemyField, occupiedFields)) {
+                nearestFieldForEnemyAttack = stepsMap.chooseNearestFromEasiestReachable(nearestFieldForEnemyAttack, f);
+            }
+
+            nearestFieldForAttack = stepsMap.chooseNearestFromEasiestReachable(nearestFieldForAttack, nearestFieldForEnemyAttack);
+        }
 
         Field result = null;
         if (nearestFieldForAttack != null) {
-            for (Field f : nearestFieldForAttack.getFirstFieldsOfWaysIn(map, speed)) {
-                result = getNearestTo(nearestFieldForAttack, result, f, map);
+            for (Field f : stepsMap.getEasiestReachableFieldsOfWaysIn(nearestFieldForAttack, speed)) {
+                result = stepsMap.chooseNearestToFromEasiestReachable(result, f, nearestFieldForAttack);
             }
         }
 
         return result;
     }
 
-    private ArrayList<Field> getOccupiedFields(ArrayList<Unit> units) {
+    private ArrayList<Field> getFieldsOccupiedBy(ArrayList<Unit> units) {
         ArrayList<Field> result = new ArrayList<>();
         for (Unit unit : units) {
             if (unit.isAlive()) {
@@ -63,61 +72,18 @@ public abstract class MeleeUnit extends Unit {
         return result;
     }
 
-    private Field getNearestFieldForAttack(ArrayList<Field> enemiesFields, ArrayList<Field> occupiedFields, int[][] map) {
-        Field result = null;
-        for (Field enemyField : enemiesFields) {
-            Field bestAttackField = null;
-            for (Field f : getAttackSuitableFields(enemyField, occupiedFields)) {
-                bestAttackField = getNearestTo(field, bestAttackField, f, map);
-            }
-
-            result = getNearestTo(field, result, bestAttackField, map);
-        }
-
-        return result;
-    }
-
-    private Field getNearestTo(Field field, Field f1, Field f2, int[][] map) {
-        if (f1 == null) {
-            return f2;
-        } else if (f2 == null) {
-            return f1;
-        } else {
-            int f1NeedSteps = map[f1.getX()][f1.getY()], f2NeedSteps = map[f2.getX()][f2.getY()];
-
-            if (f1NeedSteps < f2NeedSteps ||
-                    (f1NeedSteps == f2NeedSteps && field.getDistance(f1) < field.getDistance(f2))) {
-                return f1;
-            } else {
-                return f2;
-            }
-        }
-    }
-
-    private ArrayList<Field> getAttackSuitableFields(Field target, ArrayList<Field> occupiedFields) {
+    private ArrayList<Field> getFieldsSuitableAttackTo(Field target, ArrayList<Field> occupiedFields) {
         ArrayList<Field> result = new ArrayList<>();
-
         int x = target.getX(), y = target.getY();
         for (int newX = Math.max(0, x - maxAttackDistance); newX <= Math.min(Main.MAP_SIZE - 1, x + maxAttackDistance); newX++) {
             for (int newY = Math.max(0, y - maxAttackDistance); newY <= Math.min(Main.MAP_SIZE - 1, y + maxAttackDistance); newY++) {
                 Field f = new Field(newX, newY);
-                if (!arrayContainsField(occupiedFields, f) && f.getDistance(target) <= maxAttackDistance) {
+                if (!f.isInArray(occupiedFields) && f.getDistance(target) <= maxAttackDistance) {
                     result.add(f);
                 }
             }
         }
 
         return result;
-    }
-
-    private boolean arrayContainsField(ArrayList<Field> collection, Field field) {
-        int x = field.getX(), y = field.getY();
-
-        for (Field f : collection) {
-            if (f.getX() == x && f.getY() == y) {
-                return true;
-            }
-        }
-        return false;
     }
 }
