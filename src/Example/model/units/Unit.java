@@ -1,21 +1,25 @@
-package Example.units;
+package Example.model.units;
 
-import Example.Name;
+import Example.model.Name;
+import Example.model.Team;
+import Example.model.metric.Field;
 
 import java.util.ArrayList;
 
 public abstract class Unit implements Stepable {
     protected final Field field;
     protected final Name name;
+    protected final Team team;
 
     protected boolean isAlive;
     protected int hp, maxHp, defence,
             maxAttackDistance, damageSize,
             speed, initiative;
 
-    protected Unit(int x, int y, Name name) {
+    protected Unit(int x, int y, Name name, Team team) {
         field = new Field(x, y);
         this.name = name;
+        this.team = team;
 
         isAlive = true;
     }
@@ -100,7 +104,7 @@ public abstract class Unit implements Stepable {
         return res;
     }
 
-    protected void getDamage(int damageSize) {
+    public void getDamage(int damageSize) {
         hp = Math.max(0, hp - Math.max(0, damageSize - defence));
         if (hp == 0) {
             isAlive = false;
@@ -109,7 +113,7 @@ public abstract class Unit implements Stepable {
         showInfo();
     }
 
-    protected void getHealing(int healSize) {
+    public void getHealing(int healSize) {
         hp = Math.min(maxHp, hp + healSize);
 
         showInfo();

@@ -1,26 +1,28 @@
-package Example.units;
+package Example.model.units;
 
-import Example.Main;
-import Example.Name;
+import Example.model.Name;
+import Example.model.Team;
+import Example.model.metric.Field;
+import Example.model.metric.StepsMap;
 
 import java.util.ArrayList;
 
 public abstract class MeleeUnit extends Unit {
-    public MeleeUnit(int x, int y, Name name) {
-        super(x, y, name);
+    public MeleeUnit(int x, int y, Name name, Team team) {
+        super(x, y, name, team);
     }
 
     @Override
-    public void step(ArrayList<Unit> allies, ArrayList<Unit> enemies) {
+    public void step() {
         if (isAlive) {
             System.out.println("\nХодит " + this);
 
-            Unit nearestTarget = getNearestTarget(enemies);
+            Unit nearestTarget = getNearestTarget(team.getOpponents());
             if (nearestTarget != null) {
                 if (getDistance(nearestTarget) <= maxAttackDistance) {
                     baseAttack(nearestTarget);
                 } else {
-                    Field field = getPreferredField(allies, enemies);
+                    Field field = getPreferredField();
                     if (field != null) {
                         changeLocation(field);
                     } else {
@@ -33,18 +35,18 @@ public abstract class MeleeUnit extends Unit {
         }
     }
 
-    private Field getPreferredField(ArrayList<Unit> allies, ArrayList<Unit> enemies) {
-        ArrayList<Field> occupiedFields = new ArrayList<>(), enemiesFields = getFieldsOccupiedBy(enemies);
-        occupiedFields.addAll(getFieldsOccupiedBy(allies));
+    private Field getPreferredField() {
+        ArrayList<Field> occupiedFields = new ArrayList<>(), enemiesFields = getFieldsOccupiedBy(team.getOpponents());
+        occupiedFields.addAll(getFieldsOccupiedBy(team.getUnits()));
         occupiedFields.addAll(enemiesFields);
 
-        StepsMap stepsMap = new StepsMap(occupiedFields, field);
-        stepsMap.showMap();
+        StepsMap stepsMap = new StepsMap(field, team.getCombatMapSize(), occupiedFields);
+        //stepsMap.showMap();
 
         Field nearestFieldForAttack = null;
         for (Field enemyField : enemiesFields) {
             Field nearestFieldForEnemyAttack = null;
-            for (Field f : getFieldsSuitableAttackTo(enemyField, occupiedFields)) {
+            for (Field f : stepsMap.getFreeFieldsAround(enemyField, maxAttackDistance)) {
                 nearestFieldForEnemyAttack = stepsMap.chooseNearestFromEasiestReachable(nearestFieldForEnemyAttack, f);
             }
 
@@ -53,7 +55,7 @@ public abstract class MeleeUnit extends Unit {
 
         Field result = null;
         if (nearestFieldForAttack != null) {
-            for (Field f : stepsMap.getEasiestReachableFieldsOfWaysIn(nearestFieldForAttack, speed)) {
+            for (Field f : stepsMap.getEasiestReachableFieldsOfWaysTo(nearestFieldForAttack, speed)) {
                 result = stepsMap.chooseNearestToFromEasiestReachable(result, f, nearestFieldForAttack);
             }
         }
@@ -66,21 +68,6 @@ public abstract class MeleeUnit extends Unit {
         for (Unit unit : units) {
             if (unit.isAlive()) {
                 result.add(unit.getField());
-            }
-        }
-
-        return result;
-    }
-
-    private ArrayList<Field> getFieldsSuitableAttackTo(Field target, ArrayList<Field> occupiedFields) {
-        ArrayList<Field> result = new ArrayList<>();
-        int x = target.getX(), y = target.getY();
-        for (int newX = Math.max(0, x - maxAttackDistance); newX <= Math.min(Main.MAP_SIZE - 1, x + maxAttackDistance); newX++) {
-            for (int newY = Math.max(0, y - maxAttackDistance); newY <= Math.min(Main.MAP_SIZE - 1, y + maxAttackDistance); newY++) {
-                Field f = new Field(newX, newY);
-                if (!f.isInArray(occupiedFields) && f.getDistance(target) <= maxAttackDistance) {
-                    result.add(f);
-                }
             }
         }
 

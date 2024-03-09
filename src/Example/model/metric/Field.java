@@ -1,8 +1,6 @@
-package Example.units;
+package Example.model.metric;
 
-import java.util.ArrayList;
-
-class Field {
+public class Field {
     private int x, y;
 
     public Field(int x, int y) {
@@ -12,15 +10,6 @@ class Field {
 
     public double getDistance(Field target) {
         return Math.sqrt(Math.pow(x - target.getX(), 2) + Math.pow(y - target.getY(), 2));
-    }
-
-    public boolean isInArray(ArrayList<Field> array) {
-        for (Field f : array) {
-            if (f.getX() == x && f.getY() == y) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public int getX() {

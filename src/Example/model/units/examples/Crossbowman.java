@@ -1,10 +1,12 @@
-package Example.units;
+package Example.model.units.examples;
 
-import Example.Name;
+import Example.model.Name;
+import Example.model.Team;
+import Example.model.units.Shooter;
 
 public class Crossbowman extends Shooter {
-    public Crossbowman(int x, int y, Name name) {
-        super(x, y, name);
+    public Crossbowman(int x, int y, Name name, Team team) {
+        super(x, y, name, team);
         setBaseParameters(10, 2, 1, 2, 3, 3);
         setShotParameters(15, 10, 10, 0.5);
     }

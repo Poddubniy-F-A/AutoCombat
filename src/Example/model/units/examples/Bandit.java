@@ -1,10 +1,12 @@
-package Example.units;
+package Example.model.units.examples;
 
-import Example.Name;
+import Example.model.Name;
+import Example.model.Team;
+import Example.model.units.MeleeUnit;
 
 public class Bandit extends MeleeUnit {
-    public Bandit(int x, int y, Name name) {
-        super(x, y, name);
+    public Bandit(int x, int y, Name name, Team team) {
+        super(x, y, name, team);
         setBaseParameters(15, 2, 1, 3, 5, 2);
     }
 

@@ -1,17 +1,17 @@
-package Example.units;
+package Example.model.units.examples;
 
-import Example.Name;
-
-import java.util.ArrayList;
+import Example.model.Name;
+import Example.model.Team;
+import Example.model.units.Unit;
 
 public class Priest extends Unit {
-    public Priest(int x, int y, Name name) {
-        super(x, y, name);
+    public Priest(int x, int y, Name name, Team team) {
+        super(x, y, name, team);
         setBaseParameters(15, 0, 1, 1, 5, 1);
     }
 
     @Override
-    public void step(ArrayList<Unit> allies, ArrayList<Unit> enemies) {
+    public void step() {
         if (isAlive) {
             System.out.println("\nХодит " + this);
         }

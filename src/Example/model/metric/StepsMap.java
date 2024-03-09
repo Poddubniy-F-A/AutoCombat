@@ -1,25 +1,22 @@
-package Example.units;
-
-import Example.Main;
+package Example.model.metric;
 
 import java.util.ArrayList;
 
 public class StepsMap {
-    private final int MAP_SIZE = Main.MAP_SIZE,
-            MAP_START_CODE = 0,
-            MAP_VOID_CODE = MAP_START_CODE - 1,
-            MAP_OBSTACLE_CODE = MAP_VOID_CODE - 1;
+    private final int MAP_START_CODE = 0, MAP_VOID_CODE = MAP_START_CODE - 1, MAP_OBSTACLE_CODE = MAP_VOID_CODE - 1;
 
     private final Field field;
+    private final int size;
     private final int[][] map;
 
-    public StepsMap(ArrayList<Field> occupiedFields, Field startField) {
+    public StepsMap(Field startField, int size, ArrayList<Field> occupiedFields) {
         field = startField;
 
-        map = new int[MAP_SIZE][MAP_SIZE];
+        this.size = size;
+        map = new int[size][size];
 
-        for (int i = 0; i < MAP_SIZE; i++) {
-            for (int j = 0; j < MAP_SIZE; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 map[i][j] = MAP_VOID_CODE;
             }
         }
@@ -35,14 +32,14 @@ public class StepsMap {
         int nextSteps = curSteps + 1;
 
         boolean mapWasUpdated = false;
-        for (int i = 0; i < MAP_SIZE; i++) {
-            for (int j = 0; j < MAP_SIZE; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 if (map[i][j] == curSteps) {
                     if (i > 0 && map[i - 1][j] == MAP_VOID_CODE) {
                         map[i - 1][j] = nextSteps;
                         mapWasUpdated = true;
                     }
-                    if (i < MAP_SIZE - 1 && map[i + 1][j] == MAP_VOID_CODE) {
+                    if (i < size - 1 && map[i + 1][j] == MAP_VOID_CODE) {
                         map[i + 1][j] = nextSteps;
                         mapWasUpdated = true;
                     }
@@ -50,7 +47,7 @@ public class StepsMap {
                         map[i][j - 1] = nextSteps;
                         mapWasUpdated = true;
                     }
-                    if (j < MAP_SIZE - 1 && map[i][j + 1] == MAP_VOID_CODE) {
+                    if (j < size - 1 && map[i][j + 1] == MAP_VOID_CODE) {
                         map[i][j + 1] = nextSteps;
                         mapWasUpdated = true;
                     }
@@ -61,6 +58,21 @@ public class StepsMap {
         if (mapWasUpdated) {
             fillStepsMap(nextSteps, map);
         }
+    }
+
+    public ArrayList<Field> getFreeFieldsAround(Field target, int range) {
+        ArrayList<Field> result = new ArrayList<>();
+        int x = target.getX(), y = target.getY();
+        for (int newX = Math.max(0, x - range); newX <= Math.min(size - 1, x + range); newX++) {
+            for (int newY = Math.max(0, y - range); newY <= Math.min(size - 1, y + range); newY++) {
+                Field f = new Field(newX, newY);
+                if (map[newX][newY] != MAP_OBSTACLE_CODE && f.getDistance(target) <= range) {
+                    result.add(f);
+                }
+            }
+        }
+
+        return result;
     }
 
     public Field chooseNearestFromEasiestReachable(Field f1, Field f2) {
@@ -84,7 +96,7 @@ public class StepsMap {
         }
     }
 
-    public ArrayList<Field> getEasiestReachableFieldsOfWaysIn(Field target, int maxSteps) {
+    public ArrayList<Field> getEasiestReachableFieldsOfWaysTo(Field target, int maxSteps) {
         ArrayList<Field> res = new ArrayList<>();
         fillEasiestReachableFieldsOfWaysTo(target, maxSteps, res);
 
@@ -100,21 +112,21 @@ public class StepsMap {
             if (x > 0 && map[x - 1][y] == needSteps - 1) {
                 fillEasiestReachableFieldsOfWaysTo(new Field(x - 1, y), maxSteps, result);
             }
-            if (x < MAP_SIZE && map[x + 1][y] == needSteps - 1) {
+            if (x < size && map[x + 1][y] == needSteps - 1) {
                 fillEasiestReachableFieldsOfWaysTo(new Field(x + 1, y), maxSteps, result);
             }
             if (y > 0 && map[x][y - 1] == needSteps - 1) {
                 fillEasiestReachableFieldsOfWaysTo(new Field(x, y - 1), maxSteps, result);
             }
-            if (y < MAP_SIZE && map[x][y + 1] == needSteps - 1) {
+            if (y < size && map[x][y + 1] == needSteps - 1) {
                 fillEasiestReachableFieldsOfWaysTo(new Field(x, y + 1), maxSteps, result);
             }
         }
     }
 
     public void showMap() {
-        for (int i = 0; i < MAP_SIZE; i++) {
-            for (int j = 0; j < MAP_SIZE; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 if (map[i][j] >= 0 && map[i][j] < 10) {
                     System.out.print(" ");
                 }

@@ -1,8 +1,8 @@
-package Example.units;
+package Example.model.units;
 
-import Example.Name;
+import Example.model.Name;
+import Example.model.Team;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Shooter extends Unit {
@@ -10,8 +10,8 @@ public abstract class Shooter extends Unit {
             shotDistance, shotDamage;
     protected double shotAccuracy;
 
-    public Shooter(int x, int y, Name name) {
-        super(x, y, name);
+    public Shooter(int x, int y, Name name, Team team) {
+        super(x, y, name, team);
     }
 
     protected void setShotParameters(int shots,
@@ -26,12 +26,12 @@ public abstract class Shooter extends Unit {
     }
 
     @Override
-    public void step(ArrayList<Unit> allies, ArrayList<Unit> enemies) {
+    public void step() {
         if (isAlive) {
             System.out.println("\nХодит " + this + ", выстрелов осталось: " + shots);
 
             if (shots > 0) {
-                Unit nearestTarget = getNearestTarget(enemies);
+                Unit nearestTarget = getNearestTarget(team.getOpponents());
                 if (nearestTarget != null) {
                     distAttack(nearestTarget);
                 } else {

@@ -1,14 +1,14 @@
-package Example.units;
+package Example.model.units.examples;
 
-import Example.Name;
-
-import java.util.ArrayList;
+import Example.model.Name;
+import Example.model.Team;
+import Example.model.units.Unit;
 
 public class Magician extends Unit {
     private int mana, maxMana;
 
-    public Magician(int x, int y, Name name) {
-        super(x, y, name);
+    public Magician(int x, int y, Name name, Team team) {
+        super(x, y, name, team);
         setBaseParameters(15, 2, 2, 3, 3, 1);
 
         maxMana = 100;
@@ -16,7 +16,7 @@ public class Magician extends Unit {
     }
 
     @Override
-    public void step(ArrayList<Unit> allies, ArrayList<Unit> enemies) {
+    public void step() {
         if (isAlive) {
             System.out.println("\nХодит " + this + ", маны осталось: " + mana);
         }
