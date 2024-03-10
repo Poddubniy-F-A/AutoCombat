@@ -12,7 +12,7 @@ public class Team {
     private final String name;
     private final ArrayList<Unit> units;
 
-    public Team(Combat combat, int y) {
+    public Team(Combat combat, int size, int y) {
         this.combat = combat;
 
         Scanner scanner = new Scanner(System.in);
@@ -21,7 +21,7 @@ public class Team {
         name = scanner.next();
 
         units = new ArrayList<>();
-        for (int x = 0; x < combat.getTeamSize(); x++) {
+        for (int x = 0; x < size; x++) {
             units.add(inputUnit(x, y, scanner));
         }
     }
@@ -78,7 +78,7 @@ public class Team {
             }
         }
 
-        System.out.println("\nПроиграли " + name);
+        System.out.println("\n" + name + " побеждены");
         return false;
     }
 
@@ -92,5 +92,9 @@ public class Team {
 
     public int getCombatMapSize() {
         return combat.getMapSize();
+    }
+
+    public String getName() {
+        return name;
     }
 }

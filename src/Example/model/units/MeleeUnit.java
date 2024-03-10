@@ -15,7 +15,7 @@ public abstract class MeleeUnit extends Unit {
     @Override
     public void step() {
         if (isAlive) {
-            System.out.println("\nХодит " + this);
+            System.out.println("Ходит " + this);
 
             Unit nearestTarget = getNearestTarget(team.getOpponents());
             if (nearestTarget != null) {
@@ -46,7 +46,7 @@ public abstract class MeleeUnit extends Unit {
         Field nearestFieldForAttack = null;
         for (Field enemyField : enemiesFields) {
             Field nearestFieldForEnemyAttack = null;
-            for (Field f : stepsMap.getFreeFieldsAround(enemyField, maxAttackDistance)) {
+            for (Field f : stepsMap.getReachableFieldsAround(enemyField, maxAttackDistance)) {
                 nearestFieldForEnemyAttack = stepsMap.chooseNearestFromEasiestReachable(nearestFieldForEnemyAttack, f);
             }
 

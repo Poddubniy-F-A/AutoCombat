@@ -18,7 +18,7 @@ public class Magician extends Unit {
     @Override
     public void step() {
         if (isAlive) {
-            System.out.println("\nХодит " + this + ", маны осталось: " + mana);
+            System.out.println("Ходит " + this + ", маны осталось: " + mana);
         }
     }
 

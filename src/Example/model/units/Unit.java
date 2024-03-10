@@ -56,9 +56,9 @@ public abstract class Unit implements Stepable {
         return nearestTarget;
     }
 
-    protected void changeLocation(Field field) {
-        if (checkAlive() && !field.equals(this.field) && check(this.field.getDistance(field) <= speed, "Поле вне зоны досягаемости")) {
-            int x = field.getX(), y = field.getY();
+    protected void changeLocation(Field target) {
+        if (checkAlive() && !target.equals(field)) {
+            int x = target.getX(), y = target.getY();
             System.out.println("Перемещается в " + x + ", " + y);
 
             this.field.setX(x);
@@ -85,7 +85,7 @@ public abstract class Unit implements Stepable {
         return field.getDistance(unit.getField());
     }
 
-    protected Field getField() {
+    public Field getField() {
         return field;
     }
 

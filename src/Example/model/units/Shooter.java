@@ -28,7 +28,7 @@ public abstract class Shooter extends Unit {
     @Override
     public void step() {
         if (isAlive) {
-            System.out.println("\nХодит " + this + ", выстрелов осталось: " + shots);
+            System.out.println("Ходит " + this + ", выстрелов осталось: " + shots);
 
             if (shots > 0) {
                 Unit nearestTarget = getNearestTarget(team.getOpponents());

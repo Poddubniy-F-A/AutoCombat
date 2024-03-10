@@ -13,7 +13,7 @@ public class Priest extends Unit {
     @Override
     public void step() {
         if (isAlive) {
-            System.out.println("\nХодит " + this);
+            System.out.println("Ходит " + this);
         }
     }
 

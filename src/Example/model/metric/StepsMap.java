@@ -60,13 +60,14 @@ public class StepsMap {
         }
     }
 
-    public ArrayList<Field> getFreeFieldsAround(Field target, int range) {
+    public ArrayList<Field> getReachableFieldsAround(Field target, int range) {
         ArrayList<Field> result = new ArrayList<>();
         int x = target.getX(), y = target.getY();
         for (int newX = Math.max(0, x - range); newX <= Math.min(size - 1, x + range); newX++) {
             for (int newY = Math.max(0, y - range); newY <= Math.min(size - 1, y + range); newY++) {
+                int needSteps = map[newX][newY];
                 Field f = new Field(newX, newY);
-                if (map[newX][newY] != MAP_OBSTACLE_CODE && f.getDistance(target) <= range) {
+                if (needSteps != MAP_OBSTACLE_CODE && needSteps != MAP_VOID_CODE && f.getDistance(target) <= range) {
                     result.add(f);
                 }
             }
@@ -112,13 +113,13 @@ public class StepsMap {
             if (x > 0 && map[x - 1][y] == needSteps - 1) {
                 fillEasiestReachableFieldsOfWaysTo(new Field(x - 1, y), maxSteps, result);
             }
-            if (x < size && map[x + 1][y] == needSteps - 1) {
+            if (x < size - 1 && map[x + 1][y] == needSteps - 1) {
                 fillEasiestReachableFieldsOfWaysTo(new Field(x + 1, y), maxSteps, result);
             }
             if (y > 0 && map[x][y - 1] == needSteps - 1) {
                 fillEasiestReachableFieldsOfWaysTo(new Field(x, y - 1), maxSteps, result);
             }
-            if (y < size && map[x][y + 1] == needSteps - 1) {
+            if (y < size - 1 && map[x][y + 1] == needSteps - 1) {
                 fillEasiestReachableFieldsOfWaysTo(new Field(x, y + 1), maxSteps, result);
             }
         }
