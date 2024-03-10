@@ -27,7 +27,7 @@ public class Combat {
         View view = new View(leftTeam, rightTeam);
 
         Iterator<Unit> it = units.iterator();
-        do {
+        while (true) {
             view.view();
 
             Unit unit;
@@ -39,14 +39,24 @@ public class Combat {
             } while (!unit.isAlive());
 
             unit.step();
-        } while (leftTeam.checkTeamAlive() && rightTeam.checkTeamAlive());
+
+            if (leftTeam.isDead()) {
+                System.out.println("\nПобедили " + rightTeam.getName());
+                break;
+            } else if (rightTeam.isDead()) {
+                System.out.println("\nПобедили " + leftTeam.getName());
+                break;
+            }
+        }
     }
 
     public Team getOpponentsOf(Team team) {
         if (team == leftTeam) {
             return rightTeam;
-        } else {
+        } else if (team == rightTeam) {
             return leftTeam;
+        } else {
+            return null;
         }
     }
 

@@ -71,15 +71,13 @@ public class Team {
         return names[new Random().nextInt(names.length)];
     }
 
-    public boolean checkTeamAlive() {
+    public boolean isDead() {
         for (Unit unit : units) {
             if (unit.isAlive()) {
-                return true;
+                return false;
             }
         }
-
-        System.out.println("\n" + name + " побеждены");
-        return false;
+        return true;
     }
 
     public ArrayList<Unit> getOpponents() {
