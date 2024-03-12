@@ -6,10 +6,10 @@ import java.util.Scanner;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final int mapSize = inputMapSize(), teamSize = inputTeamSize();
 
     public static void main(String[] args) {
-        new Combat(mapSize, teamSize).emulateCombat();
+        int mapSize = inputMapSize();
+        new Combat(inputMapSize(), inputTeamSize(mapSize)).emulateCombat();
     }
 
     private static int inputMapSize() {
@@ -23,15 +23,15 @@ public class Main {
         }
     }
 
-    private static int inputTeamSize() {
+    private static int inputTeamSize(int mapSize) {
         System.out.print("\nВведите размер команды: ");
         int result = scanner.nextInt();
         if (result <= 0) {
             System.out.println("Размер команды должен быть натуральным числом");
-            return inputTeamSize();
+            return inputTeamSize(mapSize);
         } else if (result > mapSize) {
             System.out.println("Размер команды не может быть больше размеров поля");
-            return inputTeamSize();
+            return inputTeamSize(mapSize);
         } else {
             return result;
         }
