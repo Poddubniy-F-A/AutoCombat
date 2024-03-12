@@ -1,32 +1,18 @@
 package Example.model.units.examples;
 
+import Example.model.Combat;
 import Example.model.Name;
-import Example.model.Team;
-import Example.model.units.Unit;
+import Example.model.units.Healer;
 
-public class Priest extends Unit {
-    public Priest(int x, int y, Name name, Team team) {
-        super(x, y, name, team);
+public class Priest extends Healer {
+    public Priest(int x, int y, Name name, Combat combat) {
+        super(x, y, name, combat);
         setBaseParameters(15, 0, 1, 1, 5, 1);
-    }
-
-    @Override
-    public void step() {
-        if (isAlive) {
-            System.out.println("Ходит " + this);
-        }
-    }
-
-    private void heal(Unit target) {
-        final int healDistance = 2, healValue = 5;
-
-        if (checkAlive() && checkDistance(target, healDistance) && checkTargetAlive(target)) {
-            target.getHealing(healValue);
-        }
+        setManaParameters(10);
     }
 
     @Override
     public String toString() {
-        return "Монах " + name + ", запас здоровья: " + hp;
+        return "Монах " + name + ", запас здоровья: " + hp + ", запас маны: " + mana;
     }
 }

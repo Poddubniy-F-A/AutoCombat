@@ -12,6 +12,10 @@ public class Field {
         return Math.sqrt(Math.pow(x - target.getX(), 2) + Math.pow(y - target.getY(), 2));
     }
 
+    public boolean equals(Field field) {
+        return field.getX() == x && field.getY() == y;
+    }
+
     public int getX() {
         return x;
     }

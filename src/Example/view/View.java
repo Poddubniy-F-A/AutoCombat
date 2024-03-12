@@ -1,35 +1,34 @@
 package Example.view;
 
-import Example.model.Team;
 import Example.model.units.Unit;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class View {
-    private final ArrayList<Unit> leftTeamUnits, rightTeamUnits, allTeamUnits;
-    private final HashMap<Unit, Integer> deathTimes;
+    private final ArrayList<Unit> leftTeam, rightTeam, allTeamUnits;
     private final String leftTeamName, rightTeamName;
     private final int mapSize, teamSize;
 
-    private int step = 0;
+    private final String top, midl, bottom;
 
-    public View(Team leftTeam, Team rightTeam) {
-        leftTeamUnits = leftTeam.getUnits();
-        rightTeamUnits = rightTeam.getUnits();
+    public View(ArrayList<Unit> leftTeam, ArrayList<Unit> rightTeam, String leftTeamName, String rightTeamName, int mapSize) {
+        this.leftTeam = leftTeam;
+        this.rightTeam = rightTeam;
 
         allTeamUnits = new ArrayList<>();
-        allTeamUnits.addAll(this.leftTeamUnits);
-        allTeamUnits.addAll(this.rightTeamUnits);
+        allTeamUnits.addAll(this.leftTeam);
+        allTeamUnits.addAll(this.rightTeam);
 
-        deathTimes = new HashMap<>();
+        this.leftTeamName = leftTeamName;
+        this.rightTeamName = rightTeamName;
 
-        leftTeamName = leftTeam.getName();
-        rightTeamName = rightTeam.getName();
+        this.mapSize = mapSize;
+        teamSize = leftTeam.size();
 
-        mapSize = leftTeam.getCombatMapSize();
-        teamSize = leftTeamUnits.size();
+        top = formatDiv("a") + String.join("", Collections.nCopies(mapSize - 1, formatDiv("-b"))) + formatDiv("-c");
+        midl = formatDiv("d") + String.join("", Collections.nCopies(mapSize - 1, formatDiv("-e"))) + formatDiv("-f");
+        bottom = formatDiv("g") + String.join("", Collections.nCopies(mapSize - 1, formatDiv("-h"))) + formatDiv("-i");
     }
 
     private String formatDiv(String str) {
@@ -45,46 +44,34 @@ public class View {
                 .replace('-', '\u2500');
     }
 
-    public void view() {
-        String top = formatDiv("a") + String.join("", Collections.nCopies(mapSize - 1, formatDiv("-b"))) + formatDiv("-c"),
-                midl = formatDiv("d") + String.join("", Collections.nCopies(mapSize - 1, formatDiv("-e"))) + formatDiv("-f"),
-                bottom = formatDiv("g") + String.join("", Collections.nCopies(mapSize - 1, formatDiv("-h"))) + formatDiv("-i");
-        int[] l = {0};
+    public void view(int step) {
+        int[] lengths = {0};
 
-        System.out.print(AnsiColors.ANSI_YELLOW + "\nХод " + ++step + AnsiColors.ANSI_RESET);
-        allTeamUnits.forEach((v) -> l[0] = Math.max(l[0], v.toString().length()));
+        System.out.print(AnsiColors.ANSI_YELLOW + "\nХод " + step + AnsiColors.ANSI_RESET);
+        allTeamUnits.forEach((o) -> lengths[0] = Math.max(lengths[0], o.toString().length()));
+        System.out.println("_".repeat(lengths[0] * 2));
 
-        System.out.println("_".repeat(l[0] * 2));
+        System.out.println(top + "\t" + leftTeamName + " ".repeat(lengths[0] - leftTeamName.length()) + ":" + "\t" + rightTeamName);
 
-        System.out.print(top);
-        System.out.print("\t" + leftTeamName);
-        System.out.print(" ".repeat(l[0] - leftTeamName.length()));
-        System.out.println(":\t" + rightTeamName);
-
-        for (Unit unit : allTeamUnits) {
-            if (!unit.isAlive() && !deathTimes.containsKey(unit)) {
-                deathTimes.put(unit, step);
-            }
+        for (int i = 0; i < teamSize; i++) {
+            printTableString(i);
+            System.out.print(leftTeam.get(i));
+            tabSetter(leftTeam.get(i).toString().length(), lengths[0]);
+            System.out.println(rightTeam.get(i) + "\n" + midl);
         }
-
-        for (int i = 0; i < mapSize; i++) {
-            for (int j = 0; j < mapSize; j++) {
-                System.out.print(getChar(i, j));
-            }
-            System.out.print("|\t");
-            if (i < teamSize) {
-                System.out.print(leftTeamUnits.get(i));
-                tabSetter(leftTeamUnits.get(i).toString().length(), l[0]);
-                System.out.println(rightTeamUnits.get(i));
-            } else {
-                System.out.println();
-            }
-            if (i < mapSize - 1) {
-                System.out.println(midl);
-            } else {
-                System.out.println(bottom);
-            }
+        for (int i = teamSize; i < mapSize - 1; i++) {
+            printTableString(i);
+            System.out.println("\n" + midl);
         }
+        printTableString(mapSize - 1);
+        System.out.println("\n" + bottom);
+    }
+
+    private void printTableString(int i) {
+        for (int j = 0; j < mapSize; j++) {
+            System.out.print(getChar(i, j));
+        }
+        System.out.print("|\t");
     }
 
     private String getChar(int x, int y) {
@@ -93,14 +80,14 @@ public class View {
         for (Unit unit : allTeamUnits) {
             if (unit.getField().getX() == x && unit.getField().getY() == y) {
                 if (!unit.isAlive()) {
-                    int unitDeathTime = deathTimes.get(unit);
+                    int unitDeathTime = unit.getDeathTime();
                     if (unitDeathTime > maxDeathTime) {
                         out = "|" + AnsiColors.ANSI_RED + unit.toString().charAt(0) + AnsiColors.ANSI_RESET;
                         maxDeathTime = unitDeathTime;
                     }
                 } else {
                     out = "|";
-                    if (leftTeamUnits.contains(unit)) {
+                    if (leftTeam.contains(unit)) {
                         out += AnsiColors.ANSI_BLUE;
                     } else {
                         out += AnsiColors.ANSI_GREEN;

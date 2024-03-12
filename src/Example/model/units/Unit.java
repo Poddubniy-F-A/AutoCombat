@@ -1,7 +1,7 @@
 package Example.model.units;
 
+import Example.model.Combat;
 import Example.model.Name;
-import Example.model.Team;
 import Example.model.metric.Field;
 
 import java.util.ArrayList;
@@ -9,17 +9,19 @@ import java.util.ArrayList;
 public abstract class Unit implements Stepable {
     protected final Field field;
     protected final Name name;
-    protected final Team team;
+    protected final Combat combat;
 
     protected boolean isAlive;
+    protected int deathTime;
+
     protected int hp, maxHp, defence,
             maxAttackDistance, damageSize,
             speed, initiative;
 
-    protected Unit(int x, int y, Name name, Team team) {
+    protected Unit(int x, int y, Name name, Combat combat) {
         field = new Field(x, y);
         this.name = name;
-        this.team = team;
+        this.combat = combat;
 
         isAlive = true;
     }
@@ -66,7 +68,7 @@ public abstract class Unit implements Stepable {
         }
     }
 
-    protected void baseAttack(Unit target) {
+    public void baseAttack(Unit target) {
         if (checkAlive() && checkDistance(target, maxAttackDistance) && checkTargetAlive(target)) {
             System.out.println("Атака!");
             target.getDamage(damageSize);
@@ -97,7 +99,7 @@ public abstract class Unit implements Stepable {
         return isAlive;
     }
 
-    private boolean check(boolean res, String notify) {
+    protected boolean check(boolean res, String notify) {
         if (!res) {
             System.out.println(notify);
         }
@@ -108,22 +110,46 @@ public abstract class Unit implements Stepable {
         hp = Math.max(0, hp - Math.max(0, damageSize - defence));
         if (hp == 0) {
             isAlive = false;
+            deathTime = combat.getStep();
         }
-
         showInfo();
     }
 
-    public void getHealing(int healSize) {
-        hp = Math.min(maxHp, hp + healSize);
+    public void getRevival() {
+        isAlive = true;
+        getHealing();
+    }
 
+    public void getHealing() {
+        hp = maxHp;
         showInfo();
     }
 
-    private void showInfo() {
+    protected void showInfo() {
         System.out.println(this);
+    }
+
+    protected ArrayList<Unit> getAllies() {
+        return combat.getAlliesOf(this);
+    }
+
+    protected ArrayList<Unit> getEnemies() {
+        return combat.getOpponentsOf(this);
+    }
+
+    protected int getHpDelta() {
+        return maxHp - hp;
+    }
+
+    protected int getHp() {
+        return hp;
     }
 
     public int getInitiative() {
         return initiative;
+    }
+
+    public int getDeathTime() {
+        return deathTime;
     }
 }

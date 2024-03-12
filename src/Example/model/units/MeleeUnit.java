@@ -1,15 +1,15 @@
 package Example.model.units;
 
+import Example.model.Combat;
 import Example.model.Name;
-import Example.model.Team;
 import Example.model.metric.Field;
 import Example.model.metric.StepsMap;
 
 import java.util.ArrayList;
 
 public abstract class MeleeUnit extends Unit {
-    public MeleeUnit(int x, int y, Name name, Team team) {
-        super(x, y, name, team);
+    public MeleeUnit(int x, int y, Name name, Combat combat) {
+        super(x, y, name, combat);
     }
 
     @Override
@@ -17,7 +17,7 @@ public abstract class MeleeUnit extends Unit {
         if (isAlive) {
             System.out.println("Ходит " + this);
 
-            Unit nearestTarget = getNearestTarget(team.getOpponents());
+            Unit nearestTarget = getNearestTarget(getEnemies());
             if (nearestTarget != null) {
                 if (getDistance(nearestTarget) <= maxAttackDistance) {
                     baseAttack(nearestTarget);
@@ -36,21 +36,21 @@ public abstract class MeleeUnit extends Unit {
     }
 
     private Field getPreferredField() {
-        ArrayList<Field> occupiedFields = new ArrayList<>(), enemiesFields = getFieldsOccupiedBy(team.getOpponents());
-        occupiedFields.addAll(getFieldsOccupiedBy(team.getUnits()));
+        ArrayList<Field> occupiedFields = new ArrayList<>(), enemiesFields = getFieldsOccupiedBy(getEnemies());
+        occupiedFields.addAll(getFieldsOccupiedBy(getAllies()));
         occupiedFields.addAll(enemiesFields);
 
-        StepsMap stepsMap = new StepsMap(field, team.getCombatMapSize(), occupiedFields);
+        StepsMap stepsMap = new StepsMap(field, combat.getMapSize(), occupiedFields);
         //stepsMap.showMap();
 
         Field nearestFieldForAttack = null;
         for (Field enemyField : enemiesFields) {
             Field nearestFieldForEnemyAttack = null;
             for (Field f : stepsMap.getReachableFieldsAround(enemyField, maxAttackDistance)) {
-                nearestFieldForEnemyAttack = stepsMap.chooseNearestFromEasiestReachable(nearestFieldForEnemyAttack, f);
+                nearestFieldForEnemyAttack = stepsMap.chooseNearestToFromEasiestReachable(nearestFieldForEnemyAttack, f, enemyField);
             }
 
-            nearestFieldForAttack = stepsMap.chooseNearestFromEasiestReachable(nearestFieldForAttack, nearestFieldForEnemyAttack);
+            nearestFieldForAttack = stepsMap.chooseEasiestReachable(nearestFieldForAttack, nearestFieldForEnemyAttack);
         }
 
         Field result = null;

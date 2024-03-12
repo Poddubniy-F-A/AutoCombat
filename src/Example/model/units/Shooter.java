@@ -1,7 +1,7 @@
 package Example.model.units;
 
+import Example.model.Combat;
 import Example.model.Name;
-import Example.model.Team;
 
 import java.util.Random;
 
@@ -10,8 +10,8 @@ public abstract class Shooter extends Unit {
             shotDistance, shotDamage;
     protected double shotAccuracy;
 
-    public Shooter(int x, int y, Name name, Team team) {
-        super(x, y, name, team);
+    public Shooter(int x, int y, Name name, Combat combat) {
+        super(x, y, name, combat);
     }
 
     protected void setShotParameters(int shots,
@@ -28,10 +28,10 @@ public abstract class Shooter extends Unit {
     @Override
     public void step() {
         if (isAlive) {
-            System.out.println("Ходит " + this + ", выстрелов осталось: " + shots);
+            System.out.println("Ходит " + this);
 
             if (shots > 0) {
-                Unit nearestTarget = getNearestTarget(team.getOpponents());
+                Unit nearestTarget = getNearestTarget(getEnemies());
                 if (nearestTarget != null) {
                     distAttack(nearestTarget);
                 } else {
@@ -43,8 +43,8 @@ public abstract class Shooter extends Unit {
         }
     }
 
-    private void distAttack(Unit target) {
-        if (checkDistance(target, shotDistance)) {
+    public void distAttack(Unit target) {
+        if (checkAlive() && checkDistance(target, shotDistance) && check(shots > 0, "Недостаточно снарядов")) {
             if (new Random().nextDouble() >= (1 - shotAccuracy) * getDistance(target) / shotDistance) {
                 System.out.println("Выстрел!");
                 target.getDamage(shotDamage);
@@ -53,5 +53,14 @@ public abstract class Shooter extends Unit {
             }
             shots--;
         }
+    }
+
+    public void receiveShot() {
+        shots++;
+        showInfo();
+    }
+
+    public int getShots() {
+        return shots;
     }
 }

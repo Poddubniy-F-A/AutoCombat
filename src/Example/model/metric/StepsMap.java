@@ -76,7 +76,7 @@ public class StepsMap {
         return result;
     }
 
-    public Field chooseNearestFromEasiestReachable(Field f1, Field f2) {
+    public Field chooseEasiestReachable(Field f1, Field f2) {
         return chooseNearestToFromEasiestReachable(f1, f2, field);
     }
 
@@ -87,9 +87,9 @@ public class StepsMap {
             return f1;
         } else {
             int f1NeedSteps = map[f1.getX()][f1.getY()], f2NeedSteps = map[f2.getX()][f2.getY()];
-
             if (f1NeedSteps < f2NeedSteps ||
-                    (f1NeedSteps == f2NeedSteps && target.getDistance(f1) < target.getDistance(f2))) {
+                    (f1NeedSteps == f2NeedSteps && (field.getDistance(f1) < field.getDistance(f2) ||
+                            (field.getDistance(f1) == field.getDistance(f2) && target.getDistance(f1) < target.getDistance(f2))))) {
                 return f1;
             } else {
                 return f2;
