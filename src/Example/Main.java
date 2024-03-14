@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
         int mapSize = inputMapSize();
-        new Combat(inputMapSize(), inputTeamSize(mapSize)).emulateCombat();
+        new Combat(mapSize, inputTeamSize(mapSize)).emulateCombat();
     }
 
     private static int inputMapSize() {

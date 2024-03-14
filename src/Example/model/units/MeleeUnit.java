@@ -46,11 +46,8 @@ public abstract class MeleeUnit extends Unit {
         for (Field enemyField : enemiesFields) {
             Field nearestFieldForEnemyAttack = null;
             for (Field f : stepsMap.getReachableFieldsAround(enemyField, maxAttackDistance)) {
-                if (nearestFieldForEnemyAttack == null) {
-                    nearestFieldForEnemyAttack = f;
-                } else {
-                    nearestFieldForEnemyAttack = stepsMap.chooseNearestToFromEasiestReachable(nearestFieldForEnemyAttack, f, enemyField);
-                }
+                nearestFieldForEnemyAttack = nearestFieldForEnemyAttack == null ?
+                        f : stepsMap.chooseNearestToFromEasiestReachable(nearestFieldForEnemyAttack, f, enemyField);
             }
 
             if (nearestFieldForEnemyAttack != null) {
