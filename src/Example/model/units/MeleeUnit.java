@@ -41,22 +41,29 @@ public abstract class MeleeUnit extends Unit {
         occupiedFields.addAll(enemiesFields);
 
         StepsMap stepsMap = new StepsMap(field, combat.getMapSize(), occupiedFields);
-        //stepsMap.showMap();
 
         Field nearestFieldForAttack = null;
         for (Field enemyField : enemiesFields) {
             Field nearestFieldForEnemyAttack = null;
             for (Field f : stepsMap.getReachableFieldsAround(enemyField, maxAttackDistance)) {
-                nearestFieldForEnemyAttack = stepsMap.chooseNearestToFromEasiestReachable(nearestFieldForEnemyAttack, f, enemyField);
+                if (nearestFieldForEnemyAttack == null) {
+                    nearestFieldForEnemyAttack = f;
+                } else {
+                    nearestFieldForEnemyAttack = stepsMap.chooseNearestToFromEasiestReachable(nearestFieldForEnemyAttack, f, enemyField);
+                }
             }
 
-            nearestFieldForAttack = stepsMap.chooseEasiestReachable(nearestFieldForAttack, nearestFieldForEnemyAttack);
+            if (nearestFieldForEnemyAttack != null) {
+                nearestFieldForAttack = nearestFieldForAttack == null ?
+                        nearestFieldForEnemyAttack : stepsMap.chooseEasiestReachable(nearestFieldForAttack, nearestFieldForEnemyAttack);
+            }
         }
 
         Field result = null;
         if (nearestFieldForAttack != null) {
             for (Field f : stepsMap.getEasiestReachableFieldsOfWaysTo(nearestFieldForAttack, speed)) {
-                result = stepsMap.chooseNearestToFromEasiestReachable(result, f, nearestFieldForAttack);
+                result = result == null ?
+                        f : stepsMap.chooseNearestToFromEasiestReachable(result, f, nearestFieldForAttack);
             }
         }
 

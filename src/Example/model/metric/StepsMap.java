@@ -81,20 +81,12 @@ public class StepsMap {
     }
 
     public Field chooseNearestToFromEasiestReachable(Field f1, Field f2, Field target) {
-        if (f1 == null) {
-            return f2;
-        } else if (f2 == null) {
-            return f1;
-        } else {
-            int f1NeedSteps = map[f1.getX()][f1.getY()], f2NeedSteps = map[f2.getX()][f2.getY()];
-            if (f1NeedSteps < f2NeedSteps ||
-                    (f1NeedSteps == f2NeedSteps && (field.getDistance(f1) < field.getDistance(f2) ||
-                            (field.getDistance(f1) == field.getDistance(f2) && target.getDistance(f1) < target.getDistance(f2))))) {
-                return f1;
-            } else {
-                return f2;
-            }
-        }
+        int f1NeedSteps = map[f1.getX()][f1.getY()], f2NeedSteps = map[f2.getX()][f2.getY()];
+
+        return f1NeedSteps < f2NeedSteps ||
+                (f1NeedSteps == f2NeedSteps && (field.getDistance(f1) < field.getDistance(f2) ||
+                        (field.getDistance(f1) == field.getDistance(f2) && target.getDistance(f1) < target.getDistance(f2)))) ?
+                f1 : f2;
     }
 
     public ArrayList<Field> getEasiestReachableFieldsOfWaysTo(Field target, int maxSteps) {
@@ -122,18 +114,6 @@ public class StepsMap {
             if (y < size - 1 && map[x][y + 1] == needSteps - 1) {
                 fillEasiestReachableFieldsOfWaysTo(new Field(x, y + 1), maxSteps, result);
             }
-        }
-    }
-
-    public void showMap() {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (map[i][j] >= 0 && map[i][j] < 10) {
-                    System.out.print(" ");
-                }
-                System.out.print(map[i][j] + " ");
-            }
-            System.out.println();
         }
     }
 }

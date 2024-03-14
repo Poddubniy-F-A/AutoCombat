@@ -25,12 +25,12 @@ public class Combat {
         rightTeam = inputTeam(teamSize, mapSize - 1);
     }
 
-    public String inputName() {
+    private String inputName() {
         System.out.print("\nВведите название команды: ");
         return new Scanner(System.in).next();
     }
 
-    public ArrayList<Unit> inputTeam(int size, int y) {
+    private ArrayList<Unit> inputTeam(int size, int y) {
         Scanner scanner = new Scanner(System.in);
 
         ArrayList<Unit> result = new ArrayList<>();
@@ -120,7 +120,7 @@ public class Combat {
         }
     }
 
-    public boolean isDead(ArrayList<Unit> team) {
+    private boolean isDead(ArrayList<Unit> team) {
         for (Unit unit : team) {
             if (unit.isAlive()) {
                 return false;
