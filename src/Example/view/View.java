@@ -8,11 +8,11 @@ import java.util.Collections;
 public class View {
     private final ArrayList<Unit> leftTeam, rightTeam, allTeamUnits;
     private final String leftTeamName, rightTeamName;
-    private final int mapSize, teamSize;
+    private final int teamSize, mapSize;
 
     private final String top, midl, bottom;
 
-    public View(ArrayList<Unit> leftTeam, ArrayList<Unit> rightTeam, String leftTeamName, String rightTeamName, int mapSize) {
+    public View(ArrayList<Unit> leftTeam, ArrayList<Unit> rightTeam, String leftTeamName, String rightTeamName, int teamSize, int mapSize) {
         this.leftTeam = leftTeam;
         this.rightTeam = rightTeam;
 
@@ -23,8 +23,8 @@ public class View {
         this.leftTeamName = leftTeamName;
         this.rightTeamName = rightTeamName;
 
+        this.teamSize = teamSize;
         this.mapSize = mapSize;
-        teamSize = leftTeam.size();
 
         top = formatDiv("a") + String.join("", Collections.nCopies(mapSize - 1, formatDiv("-b"))) + formatDiv("-c");
         midl = formatDiv("d") + String.join("", Collections.nCopies(mapSize - 1, formatDiv("-e"))) + formatDiv("-f");

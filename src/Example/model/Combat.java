@@ -12,7 +12,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Combat {
-    private final int mapSize;
+    private final int mapSize, teamSize;
     private final String leftTeamName, rightTeamName;
     private final ArrayList<Unit> leftTeam, rightTeam;
 
@@ -20,11 +20,12 @@ public class Combat {
 
     public Combat(int mapSize, int teamSize) {
         this.mapSize = mapSize;
+        this.teamSize = teamSize;
 
         leftTeamName = inputName();
-        leftTeam = inputTeam(teamSize, 0);
+        leftTeam = inputTeam(0);
         rightTeamName = inputName();
-        rightTeam = inputTeam(teamSize, mapSize - 1);
+        rightTeam = inputTeam(mapSize - 1);
     }
 
     private String inputName() {
@@ -32,11 +33,11 @@ public class Combat {
         return new Scanner(System.in).next();
     }
 
-    private ArrayList<Unit> inputTeam(int size, int y) {
+    private ArrayList<Unit> inputTeam(int y) {
         Scanner scanner = new Scanner(System.in);
 
         ArrayList<Unit> result = new ArrayList<>();
-        for (int x = 0; x < size; x++) {
+        for (int x = 0; x < teamSize; x++) {
             result.add(inputUnit(x, y, scanner));
         }
 
@@ -105,7 +106,7 @@ public class Combat {
         units.sort((o1, o2) -> o2.getInitiative() - o1.getInitiative());
 
         System.out.println("\nСражение");
-        View view = new View(leftTeam, rightTeam, leftTeamName, rightTeamName, mapSize);
+        View view = new View(leftTeam, rightTeam, leftTeamName, rightTeamName, teamSize, mapSize);
 
         int i = 0;
         while (true) {
