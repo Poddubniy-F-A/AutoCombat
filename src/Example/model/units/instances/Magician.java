@@ -1,4 +1,4 @@
-package Example.model.units.examples;
+package Example.model.units.instances;
 
 import Example.model.Combat;
 import Example.model.Name;
@@ -7,7 +7,7 @@ import Example.model.units.Healer;
 public class Magician extends Healer {
     public Magician(int x, int y, Name name, Combat combat) {
         super(x, y, name, combat);
-        setBaseParameters(15, 2, 2, 3, 3, 1);
+        setBaseParameters(10, 1, 2, 2, 4, 1);
         setManaParameters(10);
     }
 

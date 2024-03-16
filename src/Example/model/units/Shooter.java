@@ -38,7 +38,7 @@ public abstract class Shooter extends Unit {
                     System.out.println("Все противники мертвы");
                 }
             } else {
-                System.out.println("Недостаточно снарядов");
+                System.out.println("Кончились снаряды");
             }
         }
     }

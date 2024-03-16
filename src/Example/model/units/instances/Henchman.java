@@ -1,4 +1,4 @@
-package Example.model.units.examples;
+package Example.model.units.instances;
 
 import Example.model.Combat;
 import Example.model.Name;
@@ -8,7 +8,7 @@ import Example.model.units.Unit;
 public class Henchman extends Unit {
     public Henchman(int x, int y, Name name, Combat combat) {
         super(x, y, name, combat);
-        setBaseParameters(10, 0, 1, 1, 5, 0);
+        setBaseParameters(10, 1, 1, 3, 4, 0);
     }
 
     @Override

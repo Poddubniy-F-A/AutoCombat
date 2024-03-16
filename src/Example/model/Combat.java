@@ -1,7 +1,7 @@
 package Example.model;
 
 import Example.model.units.Unit;
-import Example.model.units.examples.*;
+import Example.model.units.instances.*;
 import Example.view.View;
 
 import java.util.ArrayList;
