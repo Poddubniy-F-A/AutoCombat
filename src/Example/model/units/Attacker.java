@@ -4,7 +4,7 @@ import Example.model.Combat;
 import Example.model.Name;
 
 public abstract class Attacker extends Unit {
-    protected int damageSize;
+    protected final int damageSize;
 
     protected Attacker(int x, int y, Name name, Combat combat, int maxHp, int defence, int initiative,
                        int damageSize) {
@@ -12,7 +12,7 @@ public abstract class Attacker extends Unit {
         this.damageSize = damageSize;
     }
 
-    protected Unit getNearestTarget() {
+    protected Unit getNearestEnemy() {
         Unit result = null;
         double resDist = Double.MAX_VALUE;
 
@@ -28,5 +28,9 @@ public abstract class Attacker extends Unit {
         }
 
         return result;
+    }
+
+    protected void attack(Unit unit) {
+        unit.getDamage(damageSize);
     }
 }

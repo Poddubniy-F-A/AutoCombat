@@ -8,9 +8,7 @@ import Example.model.metric.StepsMap;
 import java.util.ArrayList;
 
 public abstract class MeleeUnit extends Attacker {
-    protected final int attackDistance = 1;
-
-    protected int speed;
+    protected final int speed;
 
     public MeleeUnit(int x, int y, Name name, Combat combat, int maxHp, int defence, int initiative, int damageSize,
                      int speed) {
@@ -23,11 +21,11 @@ public abstract class MeleeUnit extends Attacker {
         if (isAlive) {
             System.out.println("Ходит " + this);
 
-            Unit target = getNearestTarget();
+            Unit target = getNearestEnemy();
             if (target != null) {
-                if (getDistance(target) <= attackDistance) {
+                if (getDistance(target) == 1) {
                     System.out.println("Атака!");
-                    target.getDamage(damageSize);
+                    attack(target);
                 } else {
                     Field field = getPreferredField();
                     if (field != null) {
@@ -56,7 +54,7 @@ public abstract class MeleeUnit extends Attacker {
         Field nearestFieldForAttack = null;
         for (Field enemyField : enemiesFields) {
             Field nearestFieldForEnemyAttack = null;
-            for (Field f : stepsMap.getReachableFieldsAround(enemyField, attackDistance)) {
+            for (Field f : stepsMap.getReachableFieldsAround(enemyField)) {
                 nearestFieldForEnemyAttack = nearestFieldForEnemyAttack == null ?
                         f : stepsMap.chooseNearestToFromEasiestReachable(nearestFieldForEnemyAttack, f, enemyField);
             }

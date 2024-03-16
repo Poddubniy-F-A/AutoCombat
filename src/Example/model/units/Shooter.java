@@ -6,8 +6,9 @@ import Example.model.Name;
 import java.util.Random;
 
 public abstract class Shooter extends Attacker {
-    protected int shots, shotDistance;
-    protected double shotAccuracy;
+    protected final double shotAccuracy;
+    protected final int shotDistance;
+    protected int shots;
 
     public Shooter(int x, int y, Name name, Combat combat, int maxHp, int defence, int initiative, int damageSize,
                    int shots, int shotDistance, double shotAccuracy) throws tooBigMapException {
@@ -28,11 +29,11 @@ public abstract class Shooter extends Attacker {
             System.out.println("Ходит " + this);
 
             if (shots > 0) {
-                Unit target = getNearestTarget();
+                Unit target = getNearestEnemy();
                 if (target != null) {
                     if (new Random().nextDouble() >= (1 - shotAccuracy) * getDistance(target) / shotDistance) {
                         System.out.println("Выстрел!");
-                        target.getDamage(damageSize);
+                        attack(target);
                     } else {
                         System.out.println("Промах!");
                     }
