@@ -121,6 +121,12 @@ public class Combat {
             } else if (isNotAbleToContinueCombat(rightTeam)) {
                 System.out.println("\n" + rightTeamName + " сдались");
                 break;
+            } else if (isDead(leftTeam)) {
+                System.out.println("\nПобедили " + rightTeamName);
+                break;
+            } else if (isDead(rightTeam)) {
+                System.out.println("\nПобедили " + leftTeamName);
+                break;
             }
 
             Unit unit;
@@ -132,14 +138,6 @@ public class Combat {
             } while (!unit.isAlive());
 
             unit.step();
-
-            if (isDead(leftTeam)) {
-                System.out.println("\nПобедили " + rightTeamName);
-                break;
-            } else if (isDead(rightTeam)) {
-                System.out.println("\nПобедили " + leftTeamName);
-                break;
-            }
         }
     }
 

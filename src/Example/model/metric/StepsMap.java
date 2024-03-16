@@ -35,17 +35,12 @@ public class StepsMap {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (map[i][j] == curSteps) {
-                    if (i > 0) {
-                        mapWasUpdated = fieldWasVoid(i - 1, j, nextSteps);
-                    }
-                    if (i < size - 1) {
-                        mapWasUpdated = fieldWasVoid(i + 1, j, nextSteps);
-                    }
-                    if (j > 0) {
-                        mapWasUpdated = fieldWasVoid(i, j - 1, nextSteps);
-                    }
-                    if (j < size - 1) {
-                        mapWasUpdated = fieldWasVoid(i, j + 1, nextSteps);
+                    for (Field f : getFieldsAround(new Field(i, j))) {
+                        int x = f.getX(), y = f.getY();
+                        if (map[x][y] == MAP_VOID_CODE) {
+                            map[x][y] = nextSteps;
+                            mapWasUpdated = true;
+                        }
                     }
                 }
             }
@@ -56,39 +51,16 @@ public class StepsMap {
         }
     }
 
-    private boolean fieldWasVoid(int i, int j, int nextSteps) {
-        if (map[i][j] == MAP_VOID_CODE) {
-            map[i][j] = nextSteps;
-            return true;
-        }
-        return false;
-    }
-
     public ArrayList<Field> getReachableFieldsAround(Field target) {
         ArrayList<Field> result = new ArrayList<>();
-        int x = target.getX(), y = target.getY();
-
-        if (x > 0) {
-            addFieldIfItIsReachable(x - 1, y, result);
-        }
-        if (x < size - 1) {
-            addFieldIfItIsReachable(x + 1, y, result);
-        }
-        if (y > 0) {
-            addFieldIfItIsReachable(x, y - 1, result);
-        }
-        if (y < size - 1) {
-            addFieldIfItIsReachable(x, y + 1, result);
+        for (Field f : getFieldsAround(target)) {
+            int x = f.getX(), y = f.getY(), needSteps = map[x][y];
+            if (needSteps != MAP_OBSTACLE_CODE && needSteps != MAP_VOID_CODE) {
+                result.add(new Field(x, y));
+            }
         }
 
         return result;
-    }
-
-    private void addFieldIfItIsReachable(int x, int y, ArrayList<Field> result) {
-        int needSteps = map[x][y];
-        if (needSteps != MAP_OBSTACLE_CODE && needSteps != MAP_VOID_CODE) {
-            result.add(new Field(x, y));
-        }
     }
 
     public Field chooseEasiestReachable(Field f1, Field f2) {
@@ -112,29 +84,37 @@ public class StepsMap {
     }
 
     private void fillEasiestReachableFieldsOfWaysTo(Field curField, int maxSteps, ArrayList<Field> result) {
-        int x = curField.getX(), y = curField.getY(), needSteps = map[x][y];
+        int needSteps = map[curField.getX()][curField.getY()];
 
         if (needSteps <= maxSteps) {
             result.add(curField);
         } else {
-            if (x > 0) {
-                continueFillingIfFieldIsTooFar(x - 1, y, needSteps, maxSteps, result);
-            }
-            if (x < size - 1) {
-                continueFillingIfFieldIsTooFar(x + 1, y, needSteps, maxSteps, result);
-            }
-            if (y > 0) {
-                continueFillingIfFieldIsTooFar(x, y - 1, needSteps, maxSteps, result);
-            }
-            if (y < size - 1) {
-                continueFillingIfFieldIsTooFar(x, y + 1, needSteps, maxSteps, result);
+            for (Field f : getFieldsAround(curField)) {
+                int x = f.getX(), y = f.getY();
+                if (map[x][y] == needSteps - 1) {
+                    fillEasiestReachableFieldsOfWaysTo(new Field(x, y), maxSteps, result);
+                }
             }
         }
     }
 
-    private void continueFillingIfFieldIsTooFar(int x, int y, int needSteps, int maxSteps, ArrayList<Field> result) {
-        if (map[x][y] == needSteps - 1) {
-            fillEasiestReachableFieldsOfWaysTo(new Field(x, y), maxSteps, result);
+    private ArrayList<Field> getFieldsAround(Field field) {
+        ArrayList<Field> result = new ArrayList<>();
+        int x = field.getX(), y = field.getY();
+
+        if (x > 0) {
+            result.add(new Field(x - 1, y));
         }
+        if (x < size - 1) {
+            result.add(new Field(x + 1, y));
+        }
+        if (y > 0) {
+            result.add(new Field(x, y - 1));
+        }
+        if (y < size - 1) {
+            result.add(new Field(x, y + 1));
+        }
+
+        return result;
     }
 }
