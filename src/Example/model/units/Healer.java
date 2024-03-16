@@ -2,7 +2,6 @@ package Example.model.units;
 
 import Example.model.Combat;
 import Example.model.Name;
-import Example.model.metric.Field;
 
 import java.util.ArrayList;
 
@@ -89,30 +88,13 @@ public abstract class Healer extends Unit {
     private Unit getPreferredRevived(ArrayList<Unit> deadTeamMates) {
         Unit result = null;
         int resHp = 0;
-        for (Unit unit : getRevivable(deadTeamMates)) {
-            int hp = unit.getMaxHp();
-            if (result == null || hp > resHp ||
-                    (hp == resHp && getDistance(unit) < getDistance(result))) {
-                result = unit;
-                resHp = hp;
-            }
-        }
-
-        return result;
-    }
-
-    private ArrayList<Unit> getRevivable(ArrayList<Unit> deadTeamMates) {
-        ArrayList<Unit> allUnits = new ArrayList<>(getAllies());
-        allUnits.addAll(getEnemies());
-
-        ArrayList<Unit> result = new ArrayList<>(deadTeamMates);
-        for (Unit dead : deadTeamMates) {
-            Field field = dead.getField();
-            for (Unit unit : allUnits) {
-                if (unit != dead && unit.getField().equals(field) && (unit.isAlive() ||
-                        unit.getDeathTime() > dead.getDeathTime())) {
-                    result.remove(dead);
-                    break;
+        for (Unit unit : deadTeamMates) {
+            if (unit.isRevivable()) {
+                int hp = unit.getMaxHp();
+                if (result == null || hp > resHp ||
+                        (hp == resHp && getDistance(unit) < getDistance(result))) {
+                    result = unit;
+                    resHp = hp;
                 }
             }
         }

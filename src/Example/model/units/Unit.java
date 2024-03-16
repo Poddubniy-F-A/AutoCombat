@@ -59,12 +59,36 @@ public abstract class Unit implements Presentable, Stepable {
         System.out.println(this);
     }
 
+    public boolean isRevivable() {
+        if (isAlive) {
+            return false;
+        } else {
+            for (Unit unit : getAllies()) {
+                if (unit != this && unit.getField().equals(field) && (unit.isAlive() ||
+                        unit.getDeathTime() > deathTime)) {
+                    return false;
+                }
+            }
+            for (Unit unit : getEnemies()) {
+                if (unit.getField().equals(field) && (unit.isAlive() ||
+                        unit.getDeathTime() > deathTime)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
     protected ArrayList<Unit> getAllies() {
         return combat.getAlliesOf(this);
     }
 
     protected ArrayList<Unit> getEnemies() {
         return combat.getOpponentsOf(this);
+    }
+
+    public int getDeathTime() {
+        return deathTime;
     }
 
     protected int getHpDelta() {
@@ -81,9 +105,5 @@ public abstract class Unit implements Presentable, Stepable {
 
     public boolean isAlive() {
         return isAlive;
-    }
-
-    public int getDeathTime() {
-        return deathTime;
     }
 }

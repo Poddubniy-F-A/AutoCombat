@@ -144,23 +144,23 @@ public class Combat {
     private boolean isNotAbleToContinueCombat(ArrayList<Unit> team) {
         boolean existAliveHealer = false;
         for (Unit unit : team) {
-            if (unit instanceof Healer) {
+            if (unit instanceof Healer && unit.isAlive()) {
                 existAliveHealer = true;
                 break;
             }
         }
-        boolean existAliveHenchman = false;
+        boolean existHenchman = false;
         for (Unit unit : team) {
-            if (unit instanceof Henchman) {
-                existAliveHenchman = true;
+            if (unit instanceof Henchman && (unit.isAlive() || (existAliveHealer && unit.isRevivable()))) {
+                existHenchman = true;
                 break;
             }
         }
 
         for (Unit unit : team) {
-            if ((unit instanceof MeleeUnit && (existAliveHealer || unit.isAlive())) ||
-                    (unit instanceof Shooter && (existAliveHealer ||
-                            (unit.isAlive() && (((Shooter) unit).getShots() > 0 || existAliveHenchman))))) {
+            if ((unit.isAlive() || (existAliveHealer && unit.isRevivable())) &&
+                    (unit instanceof MeleeUnit ||
+                    (unit instanceof Shooter && (((Shooter) unit).getShots() > 0 || existHenchman)))) {
                 return false;
             }
         }
