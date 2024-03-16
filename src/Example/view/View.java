@@ -1,27 +1,28 @@
 package Example.view;
 
+import Example.model.Team;
 import Example.model.units.Unit;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class View {
-    private final ArrayList<Unit> leftTeam, rightTeam, allTeamUnits;
+    private final ArrayList<Unit> leftTeamUnits, rightTeamUnits, allTeamUnits;
     private final String leftTeamName, rightTeamName;
     private final int teamSize, mapSize;
 
     private final String top, midl, bottom;
 
-    public View(ArrayList<Unit> leftTeam, ArrayList<Unit> rightTeam, String leftTeamName, String rightTeamName, int teamSize, int mapSize) {
-        this.leftTeam = leftTeam;
-        this.rightTeam = rightTeam;
+    public View(Team leftTeam, Team rightTeam, int teamSize, int mapSize) {
+        leftTeamUnits = leftTeam.getUnits();
+        rightTeamUnits = rightTeam.getUnits();
 
         allTeamUnits = new ArrayList<>();
-        allTeamUnits.addAll(this.leftTeam);
-        allTeamUnits.addAll(this.rightTeam);
+        allTeamUnits.addAll(this.leftTeamUnits);
+        allTeamUnits.addAll(this.rightTeamUnits);
 
-        this.leftTeamName = leftTeamName;
-        this.rightTeamName = rightTeamName;
+        leftTeamName = leftTeam.getName();
+        rightTeamName = rightTeam.getName();
 
         this.teamSize = teamSize;
         this.mapSize = mapSize;
@@ -55,9 +56,9 @@ public class View {
 
         for (int i = 0; i < teamSize; i++) {
             printTableString(i);
-            System.out.print(leftTeam.get(i));
-            tabSetter(leftTeam.get(i).toString().length(), lengths[0]);
-            System.out.println(rightTeam.get(i) + "\n" + midl);
+            System.out.print(leftTeamUnits.get(i));
+            tabSetter(leftTeamUnits.get(i).toString().length(), lengths[0]);
+            System.out.println(rightTeamUnits.get(i) + "\n" + midl);
         }
         for (int i = teamSize; i < mapSize - 1; i++) {
             printTableString(i);
@@ -87,7 +88,7 @@ public class View {
                     }
                 } else {
                     out = "|";
-                    if (leftTeam.contains(unit)) {
+                    if (leftTeamUnits.contains(unit)) {
                         out += AnsiColors.ANSI_BLUE;
                     } else {
                         out += AnsiColors.ANSI_GREEN;
