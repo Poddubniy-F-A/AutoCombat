@@ -7,7 +7,7 @@ import Example.model.units.Healer;
 public class Priest extends Healer {
     public Priest(int x, int y, Name name, Combat combat) {
         super(x, y, name, combat);
-        setBaseParameters(10, 0, 1, 1, 5, 1);
+        setBaseParameters(10, 0, 1);
         setManaParameters(10);
     }
 

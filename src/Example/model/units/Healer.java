@@ -7,8 +7,6 @@ import Example.model.metric.Field;
 import java.util.ArrayList;
 
 public abstract class Healer extends Unit {
-    private final int healingCost = 2, revivalCost = 10;
-
     protected int maxMana, mana;
 
     public Healer(int x, int y, Name name, Combat combat) {
@@ -23,33 +21,27 @@ public abstract class Healer extends Unit {
     @Override
     public void step() {
         final double reviveNeedingLosses = getAllies().size() / 3.0;
+        final int healingCost = 2, revivalCost = 10;
 
         if (isAlive) {
             System.out.println("Ходит " + this);
 
-            ArrayList<Unit> needHealingTeamMates = new ArrayList<>(),
-                    deadTeamMates = new ArrayList<>();
-            for (Unit unit : getAllies()) {
-                if (unit.isAlive()) {
-                    if (unit.getHpDelta() > 0) {
-                        needHealingTeamMates.add(unit);
-                    }
-                } else {
-                    deadTeamMates.add(unit);
-                }
-            }
-
-            Unit healed = getPreferredHealed(needHealingTeamMates),
-                    revived = getPreferredRevived(getRevivable(deadTeamMates));
+            ArrayList<Unit> deadTeamMates = getDeadTeamMates();
+            Unit healed = getPreferredHealed(),
+                    revived = getPreferredRevived(deadTeamMates);
             if (deadTeamMates.size() < reviveNeedingLosses && healed != null) {
                 if (mana >= healingCost) {
-                    heal(healed);
+                    System.out.println("Лечение!");
+                    healed.getHealing();
+                    mana -= healingCost;
                 } else {
                     regenerateMana();
                 }
             } else if (revived != null) {
                 if (mana >= revivalCost) {
-                    revive(revived);
+                    System.out.println("Воскрешение!");
+                    revived.getRevival();
+                    mana -= revivalCost;
                 } else {
                     regenerateMana();
                 }
@@ -59,10 +51,21 @@ public abstract class Healer extends Unit {
         }
     }
 
-    private Unit getPreferredHealed(ArrayList<Unit> needHealingTeamMates) {
+    private ArrayList<Unit> getDeadTeamMates() {
+        ArrayList<Unit> result = new ArrayList<>();
+        for (Unit unit : getAllies()) {
+            if (!unit.isAlive()) {
+                result.add(unit);
+            }
+        }
+
+        return result;
+    }
+
+    private Unit getPreferredHealed() {
         Unit result = null;
         int resHpDelta = 0;
-        for (Unit unit : needHealingTeamMates) {
+        for (Unit unit : getNeedHealingTeamMates()) {
             int hpDelta = unit.getHpDelta();
             if (result == null || hpDelta > resHpDelta ||
                     (hpDelta == resHpDelta && getDistance(unit) < getDistance(result))) {
@@ -74,11 +77,22 @@ public abstract class Healer extends Unit {
         return result;
     }
 
-    private Unit getPreferredRevived(ArrayList<Unit> canBeRevived) {
+    private ArrayList<Unit> getNeedHealingTeamMates() {
+        ArrayList<Unit> result = new ArrayList<>();
+        for (Unit unit : getAllies()) {
+            if (unit.isAlive() && unit.getHpDelta() > 0) {
+                result.add(unit);
+            }
+        }
+
+        return result;
+    }
+
+    private Unit getPreferredRevived(ArrayList<Unit> deadTeamMates) {
         Unit result = null;
         int resHp = 0;
-        for (Unit unit : canBeRevived) {
-            int hp = unit.getHp();
+        for (Unit unit : getRevivable(deadTeamMates)) {
+            int hp = unit.getMaxHp();
             if (result == null || hp > resHp ||
                     (hp == resHp && getDistance(unit) < getDistance(result))) {
                 result = unit;
@@ -106,28 +120,6 @@ public abstract class Healer extends Unit {
         }
 
         return result;
-    }
-
-    public void heal(Unit target) {
-        if (checkAlive() && checkTargetAlive(target) && checkEnoughMana(healingCost)) {
-            System.out.println("Лечение!");
-
-            target.getHealing();
-            mana -= healingCost;
-        }
-    }
-
-    public void revive(Unit target) {
-        if (checkAlive() && checkEnoughMana(revivalCost)) {
-            System.out.println("Воскрешение!");
-
-            target.getRevival();
-            mana -= revivalCost;
-        }
-    }
-
-    private boolean checkEnoughMana(int needMana) {
-        return check(mana >= needMana, "Недостаточно маны");
     }
 
     private void regenerateMana() {

@@ -7,9 +7,21 @@ import Example.model.metric.StepsMap;
 
 import java.util.ArrayList;
 
-public abstract class MeleeUnit extends Unit {
+public abstract class MeleeUnit extends Attacker {
+    protected int damageSize, maxAttackDistance,
+            speed;
+
     public MeleeUnit(int x, int y, Name name, Combat combat) {
         super(x, y, name, combat);
+    }
+
+    protected void setAttackParameters(int maxAttackDistance, int damageSize) {
+        this.maxAttackDistance = maxAttackDistance;
+        this.damageSize = damageSize;
+    }
+
+    protected void setMovementParameters(int speed) {
+        this.speed = speed;
     }
 
     @Override
@@ -17,14 +29,19 @@ public abstract class MeleeUnit extends Unit {
         if (isAlive) {
             System.out.println("Ходит " + this);
 
-            Unit nearestTarget = getNearestTarget(getEnemies());
-            if (nearestTarget != null) {
-                if (getDistance(nearestTarget) <= maxAttackDistance) {
-                    baseAttack(nearestTarget);
+            Unit target = getNearestTarget(getEnemies());
+            if (target != null) {
+                if (getDistance(target) <= maxAttackDistance) {
+                    System.out.println("Атака!");
+                    target.getDamage(damageSize);
                 } else {
                     Field field = getPreferredField();
                     if (field != null) {
-                        changeLocation(field);
+                        int x = field.getX(), y = field.getY();
+
+                        System.out.println("Перемещается в " + x + ", " + y);
+                        this.field.setX(x);
+                        this.field.setY(y);
                     } else {
                         System.out.println("Ни до одного противника невозможно добраться");
                     }

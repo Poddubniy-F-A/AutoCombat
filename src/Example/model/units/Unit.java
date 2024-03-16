@@ -11,12 +11,10 @@ public abstract class Unit implements Stepable {
     protected final Name name;
     protected final Combat combat;
 
+    protected int hp, maxHp, defence, initiative;
+
     protected boolean isAlive;
     protected int deathTime;
-
-    protected int hp, maxHp, defence,
-            maxAttackDistance, damageSize,
-            speed, initiative;
 
     protected Unit(int x, int y, Name name, Combat combat) {
         field = new Field(x, y);
@@ -26,61 +24,12 @@ public abstract class Unit implements Stepable {
         isAlive = true;
     }
 
-    protected void setBaseParameters(int maxHp, int defence,
-                                     int attackDistance, int damageSize,
-                                     int speed, int initiative) {
+    protected void setBaseParameters(int maxHp, int defence, int initiative) {
         hp = maxHp;
         this.maxHp = maxHp;
         this.defence = defence;
 
-        this.maxAttackDistance = attackDistance;
-        this.damageSize = damageSize;
-
-        this.speed = speed;
         this.initiative = initiative;
-    }
-
-    protected Unit getNearestTarget(ArrayList<Unit> targets) {
-        Unit nearestTarget = null;
-        double minDist = Double.MAX_VALUE;
-
-        for (Unit target : targets) {
-            if (target.isAlive()) {
-                double dist = getDistance(target);
-
-                if (minDist > dist) {
-                    nearestTarget = target;
-                    minDist = dist;
-                }
-            }
-        }
-
-        return nearestTarget;
-    }
-
-    protected void changeLocation(Field target) {
-        if (checkAlive() && !target.equals(field)) {
-            int x = target.getX(), y = target.getY();
-            System.out.println("Перемещается в " + x + ", " + y);
-
-            this.field.setX(x);
-            this.field.setY(y);
-        }
-    }
-
-    public void baseAttack(Unit target) {
-        if (checkAlive() && checkDistance(target, maxAttackDistance) && checkTargetAlive(target)) {
-            System.out.println("Атака!");
-            target.getDamage(damageSize);
-        }
-    }
-
-    protected boolean checkAlive() {
-        return check(isAlive, "Юнит мёртв");
-    }
-
-    protected boolean checkDistance(Unit target, int maxDist) {
-        return check(getDistance(target) <= maxDist, "До цели слишком далеко");
     }
 
     protected double getDistance(Unit unit) {
@@ -91,22 +40,7 @@ public abstract class Unit implements Stepable {
         return field;
     }
 
-    protected boolean checkTargetAlive(Unit target) {
-        return check(target.isAlive(), "Цель уже мертва");
-    }
-
-    public boolean isAlive() {
-        return isAlive;
-    }
-
-    protected boolean check(boolean res, String notify) {
-        if (!res) {
-            System.out.println(notify);
-        }
-        return res;
-    }
-
-    public void getDamage(int damageSize) {
+    protected void getDamage(int damageSize) {
         hp = Math.max(0, hp - Math.max(0, damageSize - defence));
         if (hp == 0) {
             isAlive = false;
@@ -115,12 +49,12 @@ public abstract class Unit implements Stepable {
         showInfo();
     }
 
-    public void getRevival() {
+    protected void getRevival() {
         isAlive = true;
         getHealing();
     }
 
-    public void getHealing() {
+    protected void getHealing() {
         hp = maxHp;
         showInfo();
     }
@@ -141,12 +75,16 @@ public abstract class Unit implements Stepable {
         return maxHp - hp;
     }
 
-    protected int getHp() {
-        return hp;
+    protected int getMaxHp() {
+        return maxHp;
     }
 
     public int getInitiative() {
         return initiative;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
     }
 
     public int getDeathTime() {

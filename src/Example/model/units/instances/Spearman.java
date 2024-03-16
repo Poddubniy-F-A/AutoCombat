@@ -7,7 +7,9 @@ import Example.model.units.MeleeUnit;
 public class Spearman extends MeleeUnit {
     public Spearman(int x, int y, Name name, Combat combat) {
         super(x, y, name, combat);
-        setBaseParameters(15, 2, 2, 8, 3, 2);
+        setBaseParameters(15, 2, 2);
+        setAttackParameters(2, 8);
+        setMovementParameters(3);
     }
 
     @Override
