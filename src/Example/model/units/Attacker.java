@@ -3,28 +3,30 @@ package Example.model.units;
 import Example.model.Combat;
 import Example.model.Name;
 
-import java.util.ArrayList;
-
 public abstract class Attacker extends Unit {
-    protected Attacker(int x, int y, Name name, Combat combat) {
-        super(x, y, name, combat);
+    protected int damageSize;
+
+    protected Attacker(int x, int y, Name name, Combat combat, int maxHp, int defence, int initiative,
+                       int damageSize) {
+        super(x, y, name, combat, maxHp, defence, initiative);
+        this.damageSize = damageSize;
     }
 
-    protected Unit getNearestTarget(ArrayList<Unit> targets) {
-        Unit nearestTarget = null;
-        double minDist = Double.MAX_VALUE;
+    protected Unit getNearestTarget() {
+        Unit result = null;
+        double resDist = Double.MAX_VALUE;
 
-        for (Unit target : targets) {
+        for (Unit target : getEnemies()) {
             if (target.isAlive()) {
                 double dist = getDistance(target);
 
-                if (minDist > dist) {
-                    nearestTarget = target;
-                    minDist = dist;
+                if (resDist > dist) {
+                    result = target;
+                    resDist = dist;
                 }
             }
         }
 
-        return nearestTarget;
+        return result;
     }
 }

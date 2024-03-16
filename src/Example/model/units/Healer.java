@@ -7,13 +7,11 @@ import Example.model.metric.Field;
 import java.util.ArrayList;
 
 public abstract class Healer extends Unit {
-    protected int maxMana, mana;
+    protected final int maxMana;
+    protected int mana;
 
-    public Healer(int x, int y, Name name, Combat combat) {
-        super(x, y, name, combat);
-    }
-
-    protected void setManaParameters(int maxMana) {
+    public Healer(int x, int y, Name name, Combat combat, int maxHp, int defence, int initiative, int maxMana) {
+        super(x, y, name, combat, maxHp, defence, initiative);
         this.maxMana = maxMana;
         mana = maxMana;
     }

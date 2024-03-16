@@ -6,30 +6,26 @@ import Example.model.metric.Field;
 
 import java.util.ArrayList;
 
-public abstract class Unit implements Stepable {
+public abstract class Unit implements Presentable, Stepable {
     protected final Field field;
     protected final Name name;
     protected final Combat combat;
+    protected final int maxHp, defence, initiative;
 
-    protected int hp, maxHp, defence, initiative;
-
+    protected int hp, deathTime;
     protected boolean isAlive;
-    protected int deathTime;
 
-    protected Unit(int x, int y, Name name, Combat combat) {
+    protected Unit(int x, int y, Name name, Combat combat, int maxHp, int defence, int initiative) {
         field = new Field(x, y);
         this.name = name;
         this.combat = combat;
 
-        isAlive = true;
-    }
-
-    protected void setBaseParameters(int maxHp, int defence, int initiative) {
-        hp = maxHp;
         this.maxHp = maxHp;
         this.defence = defence;
-
         this.initiative = initiative;
+
+        hp = maxHp;
+        isAlive = true;
     }
 
     protected double getDistance(Unit unit) {
