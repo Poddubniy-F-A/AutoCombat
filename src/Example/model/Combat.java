@@ -111,16 +111,6 @@ public class Combat {
         while (true) {
             view.view(step++);
 
-            Unit unit;
-            do {
-                if (i == units.size()) {
-                    i = 0;
-                }
-                unit = units.get(i++);
-            } while (!unit.isAlive());
-
-            unit.step();
-
             if (isNotAbleToContinueCombat(leftTeam)) {
                 if (isNotAbleToContinueCombat(rightTeam)) {
                     System.out.println("\nНичья");
@@ -131,7 +121,19 @@ public class Combat {
             } else if (isNotAbleToContinueCombat(rightTeam)) {
                 System.out.println("\n" + rightTeamName + " сдались");
                 break;
-            } else if (isDead(leftTeam)) {
+            }
+
+            Unit unit;
+            do {
+                if (i == units.size()) {
+                    i = 0;
+                }
+                unit = units.get(i++);
+            } while (!unit.isAlive());
+
+            unit.step();
+
+            if (isDead(leftTeam)) {
                 System.out.println("\nПобедили " + rightTeamName);
                 break;
             } else if (isDead(rightTeam)) {
