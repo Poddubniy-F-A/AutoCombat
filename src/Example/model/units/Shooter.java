@@ -16,13 +16,17 @@ public abstract class Shooter extends Unit {
 
     protected void setShotParameters(int shots,
                                      int shotDistance, int shotDamage,
-                                     double shotAccuracy) {
-        this.shots = shots;
+                                     double shotAccuracy) throws tooBigMapException {
+        if (combat.getMapSize() * Math.sqrt(2) > shotDistance) {
+            throw new tooBigMapException();
+        } else {
+            this.shots = shots;
 
-        this.shotDistance = shotDistance;
-        this.shotDamage = shotDamage;
+            this.shotDistance = shotDistance;
+            this.shotDamage = shotDamage;
 
-        this.shotAccuracy = shotAccuracy;
+            this.shotAccuracy = shotAccuracy;
+        }
     }
 
     @Override
@@ -63,4 +67,6 @@ public abstract class Shooter extends Unit {
     public int getShots() {
         return shots;
     }
+
+    public static class tooBigMapException extends Exception {}
 }

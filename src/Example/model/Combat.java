@@ -1,5 +1,6 @@
 package Example.model;
 
+import Example.model.units.Shooter;
 import Example.model.units.Unit;
 import Example.model.units.instances.*;
 import Example.view.View;
@@ -68,10 +69,20 @@ public class Combat {
                 return new Priest(x, y, generateName(), this);
             }
             case CROSSBOWMAN_CODE -> {
-                return new Crossbowman(x, y, generateName(), this);
+                try {
+                    return new Crossbowman(x, y, generateName(), this);
+                } catch (Shooter.tooBigMapException e) {
+                    System.err.println("Поле слишком велико для арбалетчиков");
+                    return inputUnit(x, y, scanner);
+                }
             }
             case SNIPER_CODE -> {
-                return new Sniper(x, y, generateName(), this);
+                try {
+                    return new Sniper(x, y, generateName(), this);
+                } catch (Shooter.tooBigMapException e) {
+                    System.err.println("Поле слишком велико для снайперов");
+                    return inputUnit(x, y, scanner);
+                }
             }
             default -> {
                 System.out.println("Введено некорректное наименование типа персонажа");
@@ -116,6 +127,16 @@ public class Combat {
             } else if (isDead(rightTeam)) {
                 System.out.println("\nПобедили " + leftTeamName);
                 break;
+            } else if (onlyHenchmenRemained(leftTeam)) {
+                if (onlyHenchmenRemained(rightTeam)) {
+                    System.out.println("\nНичья");
+                } else {
+                    System.out.println("\n" + leftTeamName + " бежали");
+                }
+                break;
+            } else if (onlyHenchmenRemained(rightTeam)) {
+                System.out.println("\n" + rightTeamName + " бежали");
+                break;
             }
         }
     }
@@ -123,6 +144,15 @@ public class Combat {
     private boolean isDead(ArrayList<Unit> team) {
         for (Unit unit : team) {
             if (unit.isAlive()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean onlyHenchmenRemained(ArrayList<Unit> team) {
+        for (Unit unit : team) {
+            if (unit.isAlive() && !(unit instanceof Henchman)) {
                 return false;
             }
         }

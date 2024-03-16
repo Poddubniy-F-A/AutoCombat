@@ -5,7 +5,7 @@ import Example.model.Name;
 import Example.model.units.Shooter;
 
 public class Crossbowman extends Shooter {
-    public Crossbowman(int x, int y, Name name, Combat combat) {
+    public Crossbowman(int x, int y, Name name, Combat combat) throws tooBigMapException {
         super(x, y, name, combat);
         setBaseParameters(15, 1, 1, 3, 3, 3);
         setShotParameters(15, 20, 5, 0.5);
