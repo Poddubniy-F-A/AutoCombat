@@ -1,12 +1,13 @@
 package Example.model;
 
+import Example.model.units.Healer;
+import Example.model.units.MeleeUnit;
 import Example.model.units.Shooter;
 import Example.model.units.Unit;
 import Example.model.units.instances.*;
 import Example.view.View;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -106,53 +107,69 @@ public class Combat {
         System.out.println("\nСражение");
         View view = new View(leftTeam, rightTeam, leftTeamName, rightTeamName, mapSize);
 
-        Iterator<Unit> it = units.iterator();
+        int i = 0;
         while (true) {
-            step++;
-            view.view(step);
+            view.view(step++);
 
             Unit unit;
             do {
-                if (!it.hasNext()) {
-                    it = units.iterator();
+                if (i == units.size()) {
+                    i = 0;
                 }
-                unit = it.next();
+                unit = units.get(i++);
             } while (!unit.isAlive());
 
             unit.step();
 
-            if (isDead(leftTeam)) {
+            if (isNotAbleToContinueCombat(leftTeam)) {
+                if (isNotAbleToContinueCombat(rightTeam)) {
+                    System.out.println("\nНичья");
+                } else {
+                    System.out.println("\n" + leftTeamName + " сдались");
+                }
+                break;
+            } else if (isNotAbleToContinueCombat(rightTeam)) {
+                System.out.println("\n" + rightTeamName + " сдались");
+                break;
+            } else if (isDead(leftTeam)) {
                 System.out.println("\nПобедили " + rightTeamName);
                 break;
             } else if (isDead(rightTeam)) {
                 System.out.println("\nПобедили " + leftTeamName);
                 break;
-            } else if (onlyHenchmenRemained(leftTeam)) {
-                if (onlyHenchmenRemained(rightTeam)) {
-                    System.out.println("\nНичья");
-                } else {
-                    System.out.println("\n" + leftTeamName + " бежали");
-                }
-                break;
-            } else if (onlyHenchmenRemained(rightTeam)) {
-                System.out.println("\n" + rightTeamName + " бежали");
-                break;
             }
         }
     }
 
-    private boolean isDead(ArrayList<Unit> team) {
+    private boolean isNotAbleToContinueCombat(ArrayList<Unit> team) {
+        boolean existAliveHealer = false;
         for (Unit unit : team) {
-            if (unit.isAlive()) {
+            if (unit instanceof Healer) {
+                existAliveHealer = true;
+                break;
+            }
+        }
+        boolean existAliveHenchman = false;
+        for (Unit unit : team) {
+            if (unit instanceof Henchman) {
+                existAliveHenchman = true;
+                break;
+            }
+        }
+
+        for (Unit unit : team) {
+            if ((unit instanceof MeleeUnit && (existAliveHealer || unit.isAlive())) ||
+                    (unit instanceof Shooter && (existAliveHealer ||
+                            (unit.isAlive() && (((Shooter) unit).getShots() > 0 || existAliveHenchman))))) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean onlyHenchmenRemained(ArrayList<Unit> team) {
+    private boolean isDead(ArrayList<Unit> team) {
         for (Unit unit : team) {
-            if (unit.isAlive() && !(unit instanceof Henchman)) {
+            if (unit.isAlive()) {
                 return false;
             }
         }
