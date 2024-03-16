@@ -6,7 +6,7 @@ import Example.model.units.Shooter;
 
 public class Sniper extends Shooter {
     public Sniper(int x, int y, Name name, Combat combat) throws tooBigMapException {
-        super(x, y, name, combat, 15, 1, 3, 5, 10, 15, 1.0);
+        super(x, y, name, combat, 10, 0, 3, 5, 10, 15, 1.0);
     }
 
     @Override
