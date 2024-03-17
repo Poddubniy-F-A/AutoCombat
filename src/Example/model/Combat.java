@@ -32,7 +32,13 @@ public class Combat {
         while (true) {
             view.view(step++);
 
-            if (leftTeam.isNotAbleToContinueCombat()) {
+            if (leftTeam.isDead()) {
+                System.out.println("\nПобедили " + rightTeam.getName());
+                break;
+            } else if (rightTeam.isDead()) {
+                System.out.println("\nПобедили " + leftTeam.getName());
+                break;
+            } else if (leftTeam.isNotAbleToContinueCombat()) {
                 if (rightTeam.isNotAbleToContinueCombat()) {
                     System.out.println("\nНичья");
                 } else {
@@ -41,12 +47,6 @@ public class Combat {
                 break;
             } else if (rightTeam.isNotAbleToContinueCombat()) {
                 System.out.println("\n" + rightTeam.getName() + " сдались");
-                break;
-            } else if (leftTeam.isDead()) {
-                System.out.println("\nПобедили " + rightTeam.getName());
-                break;
-            } else if (rightTeam.isDead()) {
-                System.out.println("\nПобедили " + leftTeam.getName());
                 break;
             }
 
