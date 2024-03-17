@@ -6,7 +6,7 @@ import Example.model.Name;
 import java.util.ArrayList;
 
 public abstract class Healer extends Unit {
-    protected final int maxMana;
+    private final int maxMana;
     protected int mana;
 
     public Healer(int x, int y, Name name, Combat combat, int maxHp, int defence, int initiative, int maxMana) {

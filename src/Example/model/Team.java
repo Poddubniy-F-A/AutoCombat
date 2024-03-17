@@ -14,7 +14,7 @@ public class Team {
     private final String name;
     private final ArrayList<Unit> units;
 
-    public Team (Combat combat, int size, int y) {
+    public Team(Combat combat, int size, int y) {
         name = inputName();
         units = inputTeam(size, y, combat);
     }
@@ -62,20 +62,10 @@ public class Team {
                 return new Priest(x, y, generateName(), combat);
             }
             case CROSSBOWMAN_CODE -> {
-                try {
-                    return new Crossbowman(x, y, generateName(), combat);
-                } catch (Shooter.tooBigMapException e) {
-                    System.err.println("Поле слишком велико для арбалетчиков");
-                    return inputUnit(x, y, scanner, combat);
-                }
+                return new Crossbowman(x, y, generateName(), combat);
             }
             case SNIPER_CODE -> {
-                try {
-                    return new Sniper(x, y, generateName(), combat);
-                } catch (Shooter.tooBigMapException e) {
-                    System.err.println("Поле слишком велико для снайперов");
-                    return inputUnit(x, y, scanner, combat);
-                }
+                return new Sniper(x, y, generateName(), combat);
             }
             default -> {
                 System.out.println("Введено некорректное наименование типа персонажа");

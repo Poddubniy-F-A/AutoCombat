@@ -8,7 +8,7 @@ import Example.model.metric.StepsMap;
 import java.util.ArrayList;
 
 public abstract class MeleeUnit extends Attacker {
-    protected final int speed;
+    private final int speed;
 
     public MeleeUnit(int x, int y, Name name, Combat combat, int maxHp, int defence, int initiative, int damageSize,
                      int speed) {

@@ -5,8 +5,8 @@ import Example.model.Name;
 import Example.model.units.Shooter;
 
 public class Crossbowman extends Shooter {
-    public Crossbowman(int x, int y, Name name, Combat combat) throws tooBigMapException {
-        super(x, y, name, combat, 15, 1, 3, 5, 15, 20, 0.5);
+    public Crossbowman(int x, int y, Name name, Combat combat) {
+        super(x, y, name, combat, 15, 1, 3, 5, 0.5, 15);
     }
 
     @Override

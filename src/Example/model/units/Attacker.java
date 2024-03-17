@@ -4,7 +4,7 @@ import Example.model.Combat;
 import Example.model.Name;
 
 public abstract class Attacker extends Unit {
-    protected final int damageSize;
+    private final int damageSize;
 
     protected Attacker(int x, int y, Name name, Combat combat, int maxHp, int defence, int initiative,
                        int damageSize) {
